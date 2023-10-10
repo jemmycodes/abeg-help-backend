@@ -1,12 +1,24 @@
 import cors from 'cors';
-import morgan from 'morgan';
+import express, { Express, NextFunction, Request, Response } from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
+import hpp from 'hpp';
+import morgan from 'morgan';
+import xss from 'xss-clean';
 import { ENVIRONMENT } from './common/config';
-import express, { Express, Request, Response, NextFunction } from 'express';
-import { stream } from './common/utils/logger';
 import { connectDb } from './common/config/database';
-import AppError from './common/utils/appError';
 import { catchAsync, handleError, timeoutMiddleware } from './common/utils';
+import AppError from './common/utils/appError';
+import { stream } from './common/utils/logger';
+
+/**
+ *  uncaughtException handler
+ */
+process.on('uncaughtException', (error: Error) => {
+  console.log('UNCAUGHT EXCEPTION! 💥 Server Shutting down...');
+  console.log(error.name, error.message);
+  process.exit(1);
+});
 
 /**
  * Default app configurations
@@ -23,6 +35,16 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.disable('x-powered-by');
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+// Data sanitization against XSS
+app.use(xss());
+// Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: ['date', 'createdAt'] // whitelist some parameters
+  })
+);
 
 /**
  * Logger Middleware
@@ -67,7 +89,19 @@ app.get('*', (req: Request, res: Response) =>
 /**
  * Bootstrap server
  */
-app.listen(port, () => {
+const server = app.listen(port, () => {
   connectDb();
   console.log('=> ' + appName + ' app listening on port ' + port + ' !');
+});
+
+/**
+ * unhandledRejection  handler
+ */
+
+process.on('unhandledRejection', (error: Error) => {
+  console.log('UNHANDLED REJECTION! 💥 Server Shutting down...');
+  console.log(error.name, error.message);
+  server.close(() => {
+    process.exit(1);
+  });
 });
