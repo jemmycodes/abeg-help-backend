@@ -1,4 +1,3 @@
-
 ---
 
 # ExpressJS Project
@@ -18,12 +17,15 @@ Before you begin, make sure you have the following prerequisites installed on yo
 ## Installation
 
 Install project dependencies using npm :
-   ```bash
-   npm install
-   ```
+
+```bash
+npm install
+```
+
 OR
 
 Install project dependencies using yarn :
+
 ```bash
 yarn install
 ```
@@ -43,8 +45,8 @@ Your project relies on environment variables for configuration. To set up these 
    APP_PORT=3000
    APP_ENV=development
    ```
-   Note: configuration variables should be added based on config in the environment.js file.
 
+   Note: configuration variables should be added based on config in the environment.js file.
 
 Replace `YourAppName`, `your-database-url`, `your-database-name`, etc., with your actual project and database information.
 
@@ -57,8 +59,6 @@ npm run dev
 ```
 
 Your backend server should now be running at http://localhost:<specified-port>.
-
-
 
 ## Collaborators
 
@@ -119,7 +119,7 @@ Your backend server should now be running at http://localhost:<specified-port>.
         <a href="https://github.com/JC-Coder">
             <img src="https://avatars.githubusercontent.com/u/99423608?v=4" width="100;" alt="JC-Coder"/>
             <br />
-            <sub><b>Null</b></sub>
+            <sub><b>JC CODER - Snr Javascript Engineer</b></sub>
         </a>
     </td>
     <td align="center">
@@ -131,4 +131,3 @@ Your backend server should now be running at http://localhost:<specified-port>.
     </td></tr>
 </table>
 <!-- readme: contributors -end -->
-
