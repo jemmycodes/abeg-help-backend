@@ -44,16 +44,14 @@ app.use(xss());
 // Prevent parameter pollution
 app.use(
   hpp({
-    whitelist: ['date', 'createdAt'] // whitelist some parameters
+    whitelist: ['date', 'createdAt'], // whitelist some parameters
   })
 );
 
 /**
  * Logger Middleware
  */
-app.use(
-  morgan(ENVIRONMENT.APP.ENV !== 'local' ? 'combined' : 'dev', { stream })
-);
+app.use(morgan(ENVIRONMENT.APP.ENV !== 'local' ? 'combined' : 'dev', { stream }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   req['requestTime'] = new Date().toISOString();
@@ -65,7 +63,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 // catch 404 and forward to error handler
-app.all('*', async (req: Request, res: Response) => {
+app.all('*', async () => {
   throw new AppError('route not found', 404);
 });
 
@@ -82,7 +80,7 @@ app.use(routeErrorHandlerWrapper);
 app.get('*', (req: Request, res: Response) =>
   res.send({
     Time: new Date(),
-    status: 'Up and running'
+    status: 'Up and running',
   })
 );
 

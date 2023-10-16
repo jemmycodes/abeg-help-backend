@@ -11,12 +11,12 @@ export const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'logs/info.log', level: 'info' })
-  ]
+    new winston.transports.File({ filename: 'logs/info.log', level: 'info' }),
+  ],
 });
 
 export const stream = {
   write: (message: string) => {
     logger.info(message.trim());
-  }
+  },
 };

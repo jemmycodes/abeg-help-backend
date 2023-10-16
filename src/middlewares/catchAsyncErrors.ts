@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-type CatchAsyncFunction = (
-  req: Request,
-  res: Response,
-  next?: NextFunction
-) => Promise<any>;
+type CatchAsyncFunction = (req: Request, res: Response, next?: NextFunction) => Promise<any>;
 
 const catchAsync = (fn: CatchAsyncFunction) => {
   return async (req: Request, res: Response, next: NextFunction) => {

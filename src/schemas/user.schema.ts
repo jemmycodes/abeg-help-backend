@@ -5,17 +5,17 @@ const UserSchema: Schema<IUserDocument> = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   age: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const UserModel: Model<IUserDocument> = mongoose.model('User', UserSchema);
