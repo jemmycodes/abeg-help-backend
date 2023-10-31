@@ -12,8 +12,7 @@ import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
 import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
-import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
-import { timeoutMiddleware } from './middlewares/timeout';
+import { catchAsync, timeoutMiddleware } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { authRouter, userRouter } from './routes';
 
@@ -77,7 +76,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 // catch 404 and forward to error handler
-app.use('/api/v1/queue', serverAdapter.getRouter());
+app.use('/api/v1/queue', catchAsync(serverAdapter.getRouter()));
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
 
@@ -94,7 +93,6 @@ app.all('/*', async (req, res) => {
  */
 app.use(timeoutMiddleware);
 app.use(errorHandler);
-app.use(routeErrorHandlerWrapper);
 
 /**
  * status check

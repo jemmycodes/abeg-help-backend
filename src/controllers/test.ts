@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { catchAsync } from 'src/middlewares/catchAsyncErrors';
 import { addEmailToQueue } from 'src/queues/emailQueue';
 
-export const test = (req: Request, res: Response) => {
+export const test = catchAsync(async (req: Request, res: Response) => {
 	addEmailToQueue({
 		type: 'passwordResetSuccessful',
 		data: {
@@ -9,8 +10,10 @@ export const test = (req: Request, res: Response) => {
 			priority: 'high',
 		},
 	});
-	res.status(200).json({
+
+	// you must explicitly return a response to the client else TS will yell at you
+	return res.status(200).json({
 		status: 'success',
 		message: 'Test route',
 	});
-};
+});
