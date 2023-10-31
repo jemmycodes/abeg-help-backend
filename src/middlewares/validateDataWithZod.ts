@@ -51,13 +51,12 @@ const validateDataWithZod = (req: Request, res: Response, next: NextFunction) =>
 			errorDetails[fieldName].push(error.message);
 		}
 
-		const errorResponse = {
+		return res.status(422).json({
 			status: 'error',
 			error: 'Validation error',
 			details: errorDetails,
-		};
+		});
 
-		return res.status(422).json(errorResponse);
 	} else {
 		req.body = mainResult.data as MyDataShape;
 	}
