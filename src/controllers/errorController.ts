@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import mongoose, { CastError, Error as MongooseError } from 'mongoose';
 import { ENVIRONMENT } from 'src/common/config';
 import AppError from '../common/utils/appError';
+import { logger } from '../common/utils/logger';
 
 // Define custom error types
 type CustomError = AppError | MongooseError; // Add more custom error types as needed
@@ -73,7 +74,16 @@ const sendErrorProd = (err: AppError, res: Response) => {
 };
 
 const errorHandler: ErrorHandler = (err, req, res, next) => {
-	if (err instanceof mongoose.Error.CastError) {
+	if (err instanceof AppError) {
+		const { statusCode, message } = err;
+		logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+		if (ENVIRONMENT.APP.ENV === 'development') {
+			sendErrorDev(err, res);
+		} else if (ENVIRONMENT.APP.ENV === 'production') {
+			sendErrorProd(err, res);
+		}
+	} else if (err instanceof mongoose.Error.CastError) {
 		handleMongooseCastError(err, req, res, next);
 	} else if (err instanceof MongooseError.ValidationError) {
 		handleMongooseValidationError(err, req, res, next);
@@ -86,11 +96,11 @@ const errorHandler: ErrorHandler = (err, req, res, next) => {
 	} else if ('code' in err && err.code === 11000) {
 		handleMongooseDuplicateFieldsError(err, req, res, next);
 	} else {
-		if (ENVIRONMENT.APP.ENV === 'development') {
-			sendErrorDev(err as AppError, res);
-		} else if (ENVIRONMENT.APP.ENV === 'production') {
-			sendErrorProd(err as AppError, res);
-		}
+		res.status(500).json({
+			status: 'error',
+			message: 'Something went wrong',
+		});
+		logger.error(`unhandled error: ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 	}
 };
 

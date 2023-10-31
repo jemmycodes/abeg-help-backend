@@ -13,5 +13,6 @@ export default class AppError extends Error {
 		this.data = data;
 
 		Error.captureStackTrace(this, this.constructor);
+		Object.setPrototypeOf(this, AppError.prototype);
 	}
 }
