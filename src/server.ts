@@ -12,7 +12,7 @@ import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
 import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
-import { catchAsync, timeoutMiddleware } from './middlewares';
+import { timeoutMiddleware } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { userRouter } from './routes';
 
@@ -76,7 +76,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 // catch 404 and forward to error handler
-app.use('/api/v1/queue', catchAsync(serverAdapter.getRouter()));
+app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/user', userRouter);
 
 app.all('/*', async (req, res) => {
@@ -86,12 +86,6 @@ app.all('/*', async (req, res) => {
 		message: 'Invalid endpoint',
 	});
 });
-
-/**
- * Error handler middlewares
- */
-app.use(timeoutMiddleware);
-app.use(errorHandler);
 
 /**
  * status check
@@ -117,6 +111,12 @@ const server = app.listen(port, () => {
 		await emailQueueEvent.waitUntilReady();
 	})();
 });
+
+/**
+ * Error handler middlewares
+ */
+app.use(timeoutMiddleware);
+app.use(errorHandler);
 
 /**
  * unhandledRejection  handler

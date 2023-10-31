@@ -2,10 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import mongoose, { CastError, Error as MongooseError } from 'mongoose';
 import { ENVIRONMENT } from 'src/common/config';
 import AppError from '../common/utils/appError';
-import { logger } from '../common/utils/logger';
 
 // Define custom error types
-type CustomError = CastError | MongooseError.ValidationError | AppError | Error; // Add more custom error types as needed
+type CustomError = AppError | MongooseError; // Add more custom error types as needed
 
 type ErrorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => void;
 
@@ -53,7 +52,6 @@ const handleTimeoutError = (err: CustomError, req: Request, res: Response, next:
 const sendErrorDev = (err: AppError, res: Response) => {
 	res.status(err.statusCode).json({
 		status: err.status,
-		error: err,
 		message: err.message,
 		stack: err.stack,
 	});
@@ -75,21 +73,7 @@ const sendErrorProd = (err: AppError, res: Response) => {
 };
 
 const errorHandler: ErrorHandler = (err, req, res, next) => {
-	if (err instanceof AppError) {
-		// Handle custom AppError
-		err.statusCode = err.statusCode || 500;
-		err.status = err.status || 'error';
-		err.message = err.message || 'Something went wrong';
-
-		const { statusCode, message } = err;
-		logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-
-		if (ENVIRONMENT.APP.ENV === 'development') {
-			sendErrorDev(err, res);
-		} else if (ENVIRONMENT.APP.ENV === 'production') {
-			sendErrorProd(err, res);
-		}
-	} else if (err instanceof mongoose.Error.CastError) {
+	if (err instanceof mongoose.Error.CastError) {
 		handleMongooseCastError(err, req, res, next);
 	} else if (err instanceof MongooseError.ValidationError) {
 		handleMongooseValidationError(err, req, res, next);
@@ -101,6 +85,12 @@ const errorHandler: ErrorHandler = (err, req, res, next) => {
 		handleJWTExpiredError(err, req, res, next);
 	} else if ('code' in err && err.code === 11000) {
 		handleMongooseDuplicateFieldsError(err, req, res, next);
+	} else {
+		if (ENVIRONMENT.APP.ENV === 'development') {
+			sendErrorDev(err as AppError, res);
+		} else if (ENVIRONMENT.APP.ENV === 'production') {
+			sendErrorProd(err as AppError, res);
+		}
 	}
 };
 
