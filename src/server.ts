@@ -12,8 +12,7 @@ import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
 import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
-import { catchAsync } from './middlewares/catchAsyncErrors';
-import { timeoutMiddleware } from './middlewares/timeout';
+import { catchAsync, timeoutMiddleware } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { userRouter } from './routes';
 
