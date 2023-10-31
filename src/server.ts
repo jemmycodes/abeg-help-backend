@@ -16,6 +16,7 @@ import { routeErrorHandlerWrapper } from './middlewares/catchAsyncErrors';
 import { timeoutMiddleware } from './middlewares/timeout';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { userRouter } from './routes';
+
 /**
  *  uncaughtException handler
  */

@@ -1,37 +1,47 @@
+import { PhoneNumberUtil } from 'google-libphonenumber';
 import { z } from 'zod';
+
+const verifyPhoneNumber = (value: string) => {
+	const phoneUtil = PhoneNumberUtil.getInstance();
+	const number = phoneUtil.parse(value.includes('+') ? value : `+${value}`, 'NG');
+	return phoneUtil.isValidNumber(number);
+};
 
 export const SignUpSchema = z
 	.object({
 		firstName: z
 			.string()
-			.min(1, 'Please enter your firstname')
-			.regex(/^\w+$/, 'Firstname can only contain letters, numbers and/or underscore (_)'),
+			.min(2, 'First name must be at least 2 characters long')
+			.max(50, 'First name must not be 50 characters long')
+			.regex(
+				/^[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g,
+				'Firstname must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").'
+			),
 		lastName: z
 			.string()
-			.min(1, 'Please enter your lastname')
-			.regex(/^\w+$/, 'Lastname can only contain letters, numbers and/or underscore (_)'),
-
+			.min(2, 'Last name must be at least 2 characters long')
+			.max(50, 'Last name must not be 50 characters long')
+			.regex(
+				/^[A-Z][a-z'-]*(?:-[A-Z][a-z'-]*)*(?:'[A-Z][a-z'-]*)*$/g,
+				'Lastname must be in sentence case, can include hyphen, and apostrophes (e.g., "Ali", "Ade-Bright" or "Smith\'s").'
+			),
 		email: z.string().email('Please enter a valid email address!'),
 		password: z
 			.string()
-			.min(12, 'Password must have at least 12 characters!')
+			.min(8, 'Password must have at least 8 characters!')
 			.regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/, {
 				message: `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character or symbol`,
 			}),
-		phoneNumber: z
-			.string()
-			.min(5, 'Phone number cannot be less than 5 digits!')
-			.max(20, 'Phone number cannot be more than 20 digits!')
-			.regex(/(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/g, {
-				message: 'Please enter a valid phone number!',
-			}),
-		gender: z.enum(['male', 'female', 'other', 'none']),
-		address: z.string(),
-		confirmPassword: z.string().min(1, 'Password confirmation is required!'),
-		acceptTerms: z.boolean().optional(),
+		phoneNumber: z.string().refine((value) => verifyPhoneNumber(value), {
+			message: 'Invalid Nigerian phone number.',
+		}),
+		gender: z.enum(['male', 'female', 'other', 'none'], {
+			errorMap: () => ({ message: 'Please choose one of the gender options' }),
+		}),
+		confirmPassword: z.string().min(8, 'Password confirmation is required!'),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
-		message: 'Both passwords must match!',
+		message: 'Passwords do not match!',
 		path: ['confirmPassword'],
 	});
 

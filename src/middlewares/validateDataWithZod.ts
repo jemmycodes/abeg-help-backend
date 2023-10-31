@@ -5,13 +5,30 @@ const validateDataWithZod =
 	<TSchema extends ZodSchema>(Schema: TSchema) =>
 	(req: Request, res: Response, next: NextFunction) => {
 		const rawData = req.body;
+		if (!rawData)
+			return res.status(400).json({
+				status: 'error',
+				error: 'No data provided',
+			});
 		const result = Schema.safeParse(rawData);
-
 		if (!result.success) {
-			const zodErrors = { errors: result.error.flatten().fieldErrors };
+			const errorDetails: { [key: string]: string[] } = {};
 
-			res.status(422).json(zodErrors);
-			return;
+			for (const error of result.error.errors) {
+				const fieldName = error.path[0];
+				if (!errorDetails[fieldName]) {
+					errorDetails[fieldName] = [];
+				}
+				errorDetails[fieldName].push(error.message);
+			}
+
+			const errorResponse = {
+				status: 'error',
+				error: 'Validation error',
+				details: errorDetails,
+			};
+
+			return res.status(422).json(errorResponse);
 		}
 
 		req.body = result.data;
