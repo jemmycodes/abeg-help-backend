@@ -14,7 +14,7 @@ import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
 import { timeoutMiddleware, validateDataWithZod, wrapRouter } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import { userRouter } from './routes';
+import { authRouter, userRouter } from './routes';
 
 /**
  *  uncaughtException handler
@@ -79,6 +79,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(validateDataWithZod);
 app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/user', wrapRouter(userRouter));
+app.use('/api/v1/auth', wrapRouter(authRouter));
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
