@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
+import { DateTime } from 'luxon';
+import { catchAsync } from 'src/middlewares';
 import { generateRandomString, hashData } from '../common/utils';
 import AppError from '../common/utils/appError';
 import { AppResponse } from '../common/utils/appResponse';
 import UserModel from '../models/userModel';
-import { DateTime } from 'luxon';
 
-export const seedUser = async (req: Request, res: Response) => {
+export const seedUser = catchAsync(async (req: Request, res: Response) => {
 	const user = await UserModel.create({
 		firstName: 'test',
 		lastName: 'test',
@@ -14,9 +15,9 @@ export const seedUser = async (req: Request, res: Response) => {
 	});
 
 	return AppResponse(res, 200, user, 'User created');
-};
+});
 
-export const resetPassword = async (req: Request, res: Response) => {
+export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 	const { email } = req.body;
 
 	if (!email) {
@@ -36,4 +37,4 @@ export const resetPassword = async (req: Request, res: Response) => {
 	await user.save();
 
 	return AppResponse(res, 200, token, 'Password reset link sent to your email');
-};
+});

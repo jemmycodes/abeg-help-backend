@@ -12,7 +12,7 @@ import { ENVIRONMENT } from './common/config';
 import { connectDb } from './common/config/database';
 import { logger, stream } from './common/utils/logger';
 import errorHandler from './controllers/errorController';
-import { timeoutMiddleware, validateDataWithZod, wrapRouter } from './middlewares';
+import { timeoutMiddleware, validateDataWithZod } from './middlewares';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { authRouter, userRouter } from './routes';
 
@@ -78,8 +78,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // catch 404 and forward to error handler
 app.use(validateDataWithZod);
 app.use('/api/v1/queue', serverAdapter.getRouter());
-app.use('/api/v1/user', wrapRouter(userRouter));
-app.use('/api/v1/auth', wrapRouter(authRouter));
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/auth', authRouter);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
