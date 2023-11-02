@@ -42,7 +42,7 @@
 		"hpp": "^0.2.3",
 		"ioredis": "^5.3.2",
 		"luxon": "^3.4.3",
-		"mongoose": "^7.6.0",
+		"mongoose": "^8.0.0",
 		"morgan": "^1.10.0",
 		"resend": "^1.1.0",
 		"tsconfig-paths": "^3.14.1",
