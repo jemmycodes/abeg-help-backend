@@ -5,6 +5,7 @@ import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
+import contentSecurityPolicy from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
@@ -60,7 +61,18 @@ app.use(
 		whitelist: ['date', 'createdAt'], // whitelist some parameters
 	})
 );
-
+app.use(
+	contentSecurityPolicy({
+		useDefaults: true,
+		directives: {
+			defaultSrc: ["'self'", 'default.example'],
+			scriptSrc: ["'self'", 'js.example.com'],
+			objectSrc: ["'none'"],
+			upgradeInsecureRequests: [],
+		},
+		reportOnly: false,
+	})
+);
 /**
  * Logger Middleware
  */
