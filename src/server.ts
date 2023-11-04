@@ -65,8 +65,8 @@ app.use(
 	contentSecurityPolicy({
 		useDefaults: true,
 		directives: {
-			defaultSrc: ["'self'", 'default.example'],
-			scriptSrc: ["'self'", 'js.example.com'],
+			defaultSrc: ["'self'", 'default.example'], // update later when we have a domain
+			scriptSrc: ["'self'", 'js.example.com'], // update later when we have a domain
 			objectSrc: ["'none'"],
 			upgradeInsecureRequests: [],
 		},
