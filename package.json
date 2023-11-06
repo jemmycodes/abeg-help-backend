@@ -9,7 +9,6 @@
 		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register build/server.js",
 		"build": "tsc",
 		"dev": "nodemon",
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"watch": "tsc --watch & nodemon build/index.js",
 		"lint": "npx eslint src/",
 		"format": "npx prettier --write .",
