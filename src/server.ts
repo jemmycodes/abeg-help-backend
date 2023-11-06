@@ -1,3 +1,10 @@
+import { ENVIRONMENT } from '@/common/config';
+import { connectDb } from '@/common/config/database';
+import { logger, stream } from '@/common/utils/logger';
+import errorHandler from '@/controllers/errorController';
+import { timeoutMiddleware, validateDataWithZod } from '@/middlewares';
+import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from '@/queues/emailQueue';
+import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
@@ -9,13 +16,6 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
-import { ENVIRONMENT } from './common/config';
-import { connectDb } from './common/config/database';
-import { logger, stream } from './common/utils/logger';
-import errorHandler from './controllers/errorController';
-import { timeoutMiddleware, validateDataWithZod } from './middlewares';
-import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import { authRouter, userRouter } from './routes';
 
 /**
  *  uncaughtException handler
@@ -167,8 +167,9 @@ app.get('*', (req: Request, res: Response) =>
 /**
  * Bootstrap server
  */
+
 const server = app.listen(port, async () => {
-	await connectDb();
+	 connectDb();
 	console.log('=> ' + appName + ' app listening on port ' + port + '!');
 
 	// start the email worker and queues
