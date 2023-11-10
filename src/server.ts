@@ -49,15 +49,13 @@ createBullBoard({
  * Express configuration
  */
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.disable('x-powered-by');
 
 /**
  * Compression Middleware
  */
 app.use(compression());
-
-/**
- * App Security
- */
 
 // Rate limiter middleware
 const limiter = rateLimit({
@@ -149,7 +147,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // catch 404 and forward to error handler
 app.use(validateDataWithZod);
-app.use('/api/v1/alive', (req, res) => res.status(200).json({ status: 'success', message: 'server is alive' }));
 app.use('/api/v1/queue', serverAdapter.getRouter());
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
@@ -158,10 +155,19 @@ app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
 	res.status(404).json({
 		status: 'error',
-		message:
-			'Invalid endpoint, kindly check the documentation at https://documenter.getpostman.com/view/8405380/2s9YXk21DZ for the right endpoint and usage',
+		message: 'Invalid endpoint',
 	});
 });
+
+/**
+ * status check
+ */
+app.get('*', (req: Request, res: Response) =>
+	res.send({
+		Time: new Date(),
+		status: 'Up and running',
+	})
+);
 
 /**
  * Bootstrap server
