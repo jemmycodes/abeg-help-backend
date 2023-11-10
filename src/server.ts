@@ -67,14 +67,14 @@ const limiter = rateLimit({
 });
 app.use('/*', limiter);
 
-// Middleware to allow CORS from frontend
+//Middleware to allow CORS from frontend
 app.use(
 	cors({
 		origin: ['https://your-real-frontend-url.com', 'http://localhost'], // TODO: change this to your frontend url
 		credentials: true,
 	})
 );
-// Configure Content Security Policy (CSP)
+//Configure Content Security Policy (CSP)
 const contentSecurityPolicy = {
 	directives: {
 		defaultSrc: ["'self'"],
@@ -109,7 +109,7 @@ const helmetConfig: HelmetOptions = {
 
 app.use(helmet(helmetConfig));
 
-// Secure cookies and other helmet-related configurations
+//Secure cookies and other helmet-related configurations
 app.use(helmet.hidePoweredBy());
 app.use(helmet.noSniff());
 app.use(helmet.ieNoOpen());
