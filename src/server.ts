@@ -148,6 +148,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // catch 404 and forward to error handler
 app.use(validateDataWithZod);
 app.use('/api/v1/queue', serverAdapter.getRouter());
+app.use('/api/v1/alive', (req, res) => res.status(200).json({ status: 'success', message: 'Server alive' }));
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
 
@@ -155,7 +156,7 @@ app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
 	res.status(404).json({
 		status: 'error',
-		message: 'Invalid endpoint',
+		message: 'Server alive but Route not found, Kindly check the API documentation for the right route',
 	});
 });
 
