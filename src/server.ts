@@ -49,6 +49,8 @@ createBullBoard({
 /**
  * Express configuration
  */
+app.set('trust proxy', true); // Enable trust proxy
+
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.disable('x-powered-by');
