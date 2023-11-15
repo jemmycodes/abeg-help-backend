@@ -3,12 +3,13 @@ import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/controllers/errorController';
 import { validateDataWithZod } from '@/middlewares';
 import { timeoutMiddleware } from '@/middlewares/timeout';
-import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
+import bodyParser from 'body-parser';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
@@ -18,8 +19,7 @@ import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 
 /**
  *  uncaughtException handler

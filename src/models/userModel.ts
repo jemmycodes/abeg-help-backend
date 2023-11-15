@@ -1,9 +1,9 @@
-import { Gender, IDType, Role, JWTExpiresIn } from '@/common/constants';
+import { ENVIRONMENT } from '@/common/config';
+import { Gender, IDType, JWTExpiresIn, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
-import mongoose, { HydratedDocument, Model } from 'mongoose';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { ENVIRONMENT } from '@/common/config';
+import mongoose, { HydratedDocument, Model } from 'mongoose';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 
@@ -127,7 +127,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 
 // only pick users that have are not deleted || suspended
 userSchema.pre(/^find/, function (this: Model<IUser>, next) {
-	this.find({ isDeleted: { $ne: true }, isSuspended: { $ne: true } });
+	this.find({ isDeleted: { $ne: true } });
 	next();
 });
 

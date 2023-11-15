@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
-import AppError from 'src/common/utils/appError';
-import { UserModel } from '@/models';
 import { JWTExpiresIn, Provider } from '@/common/constants';
 import { setCache, setCookie } from '@/common/utils';
+import { catchAsync } from '@/middlewares';
+import { UserModel } from '@/models';
+import { Request, Response } from 'express';
+import AppError from 'src/common/utils/appError';
 
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = catchAsync(async (req: Request, res: Response) => {
 	try {
 		const { email, firstName, lastName, phoneNumber, password, gender } = req.body;
 
@@ -47,4 +48,4 @@ export const signUp = async (req: Request, res: Response) => {
 			res.status(500).json({ error: 'Internal Server Error' });
 		}
 	}
-};
+});

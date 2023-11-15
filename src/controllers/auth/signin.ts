@@ -1,10 +1,11 @@
+import { catchAsync } from '@/middlewares';
 import type { Request, Response } from 'express';
 import { setCache, setCookie } from 'src/common/utils';
 import { JWTExpiresIn, Provider } from '../../common/constants';
 import AppError from '../../common/utils/appError';
 import { UserModel as User } from '../../models/userModel';
 
-export const signInController = async (req: Request, res: Response) => {
+export const signInController = catchAsync(async (req: Request, res: Response) => {
 	const body = req.body as { email: string; password: string };
 	if (!body.email) {
 		throw new AppError('Email field is required', 401);
@@ -12,7 +13,7 @@ export const signInController = async (req: Request, res: Response) => {
 	if (!body.password) {
 		throw new AppError('Password field is required', 401);
 	}
-	const user = await User.findOne({ email: body.email, isDeleted: false, providers: Provider.Local }).select(
+	const user = await User.findOne({ email: body.email, providers: Provider.Local }).select(
 		'refreshToken loginRetries isSuspended isEmailVerified lastLogin password'
 	);
 
@@ -63,4 +64,4 @@ export const signInController = async (req: Request, res: Response) => {
 	await user.save();
 	await setCache(id, user.toJSON([]));
 	res.json({ user });
-};
+});
