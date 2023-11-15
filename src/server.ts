@@ -1,9 +1,9 @@
-import { ENVIRONMENT } from '@/common/config';
-import { connectDb } from '@/common/config/database';
+import { ENVIRONMENT, connectDb } from '@/common/config';
 import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/controllers/errorController';
-import { timeoutMiddleware, validateDataWithZod } from '@/middlewares';
-import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from '@/queues/emailQueue';
+import { validateDataWithZod } from '@/middlewares';
+import { timeoutMiddleware } from '@/middlewares/timeout';
+import { emailQueue, stopQueue } from '@/queues/emailQueue';
 import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
@@ -18,6 +18,7 @@ import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
+import { emailQueueEvent, emailWorker } from './queues/emailQueue';
 
 /**
  *  uncaughtException handler
@@ -156,7 +157,7 @@ app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
 	res.status(404).json({
 		status: 'error',
-		message: 'Server alive but Route not found, Kindly check the API documentation for the right route',
+		message: `OOPs!! Server can't find /api/auth/profile. This could be a typographical issue. Check the API documentation for further guidance`,
 	});
 });
 

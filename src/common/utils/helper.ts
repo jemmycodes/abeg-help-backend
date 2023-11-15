@@ -1,9 +1,12 @@
-import { randomBytes } from 'crypto';
 import bcrypt from 'bcryptjs';
-import { ENVIRONMENT } from '../config';
-import type { Response, CookieOptions } from 'express';
+import { randomBytes } from 'crypto';
+import type { CookieOptions, Response } from 'express';
 import Redis from 'ioredis';
+import { ENVIRONMENT } from '../config';
 
+if (!process.env.CACHE_REDIS_URL) {
+	throw new Error('Cache redis url not found');
+}
 const redis = new Redis(process.env.CACHE_REDIS_URL!);
 
 const generateRandomString = () => {
@@ -59,4 +62,4 @@ const getFromCache = async <T = string>(key: string) => {
 	return parseData as T;
 };
 
-export { generateRandomString, hashData, setCookie, setCache, getFromCache };
+export { generateRandomString, getFromCache, hashData, setCache, setCookie };

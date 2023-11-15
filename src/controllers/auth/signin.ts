@@ -1,9 +1,8 @@
 import type { Request, Response } from 'express';
-import { UserModel as User } from '../../models/userModel';
+import { setCache, setCookie } from 'src/common/utils';
+import { JWTExpiresIn, Provider } from '../../common/constants';
 import AppError from '../../common/utils/appError';
-import { Provider } from '../../common/constants';
-import { JWTExpiresIn } from '../../common/constants';
-import { setCookie, setCache } from 'src/common/utils';
+import { UserModel as User } from '../../models/userModel';
 
 export const signInController = async (req: Request, res: Response) => {
 	const body = req.body as { email: string; password: string };
