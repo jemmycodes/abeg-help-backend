@@ -3,7 +3,7 @@ import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/controllers/errorController';
 import { validateDataWithZod } from '@/middlewares';
 import { timeoutMiddleware } from '@/middlewares/timeout';
-import { emailQueue, stopQueue } from '@/queues/emailQueue';
+import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
 import { authRouter, userRouter } from '@/routes';
 import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
@@ -18,7 +18,8 @@ import helmetCsp from 'helmet-csp';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
-import { emailQueueEvent, emailWorker } from './queues/emailQueue';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 /**
  *  uncaughtException handler
@@ -49,7 +50,7 @@ createBullBoard({
 /**
  * Express configuration
  */
-app.set('trust proxy', true); // Enable trust proxy
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']); // Enable trust proxy
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -144,6 +145,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 
+app.use(bodyParser.json());
+app.use(cookieParser());
 /**
  * Initialize routes
  */
@@ -155,7 +158,7 @@ app.use('/api/v1/alive', (req, res) =>
 	res.status(200).json({ status: 'success', message: 'Server is up and running' })
 );
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/auth', limiter, authRouter);
 
 app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
