@@ -7,11 +7,6 @@ import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 import { setCache, setCookie } from 'src/common/utils';
 
-export const signInController = catchAsync(async (req: Request, res: Response) => {
-	const { email, password } = req.body as { email: string; password: string };
-
-	if (!email || !password) {
-		throw new AppError('Email and password are required fields', 401);
 export const signIn = catchAsync(async (req: Request, res: Response) => {
 	const { email, password } = req.body as { email: string; password: string };
 
