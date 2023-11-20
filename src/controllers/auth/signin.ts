@@ -1,4 +1,4 @@
-import { JWTExpiresIn, Provider } from '@/common/constants';
+import { Provider } from '@/common/constants';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -15,7 +15,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	}
 
 	const user = await User.findOne({ email, providers: Provider.Local }).select(
-		'refreshToken loginRetries isSuspended isEmailVerified lastLogin password'
+		'+refreshToken +loginRetries +isSuspended +isEmailVerified +lastLogin +password'
 	);
 
 	if (!user) {
@@ -24,10 +24,9 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 
 	// check if user has exceeded login retries (3 times in 12 hours)
 	const currentRequestTime = DateTime.now();
-	const lastLoginRetry = currentRequestTime.diff(DateTime.fromISO(user.updatedAt.toISOString()), 'hours');
-	console.log(lastLoginRetry);
+	const lastLoginRetry = currentRequestTime.diff(DateTime.fromISO(user.lastLogin.toISOString()), 'hours');
 
-	if (user.loginRetries >= 3 && lastLoginRetry.hours < 12) {
+	if (user.loginRetries >= 3 && Math.round(lastLoginRetry.hours) < 12) {
 		throw new AppError('login retries exceeded!', 401);
 	}
 
@@ -51,25 +50,34 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	const refreshToken = user.generateRefreshToken();
 	const accessToken = user.generateAccessToken();
 
-	setCookie(res, 'abegAccessToken', accessToken, {
-		maxAge: JWTExpiresIn.Access / 1000,
-		path: '/',
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
+	setCookie(res, 'abegAccessToken', accessToken!, {
+		maxAge: 15 * 60 * 1000, // 15 minutes
 	});
 
 	setCookie(res, 'abegRefreshToken', refreshToken, {
-		maxAge: JWTExpiresIn.Refresh / 1000,
-		path: '/',
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
+		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
 
+	// update user loginRetries to 0 and lastLogin to current time
 	await User.findByIdAndUpdate(user._id, {
 		$inc: { loginRetries: 0 },
 		lastLogin: DateTime.now(),
 	});
 
 	await setCache(user._id.toString(), user.toJSON(['password']));
-	AppResponse(res, 201, user.toJSON(), 'You have successfully created an account');
+	AppResponse(
+		res,
+		201,
+		user.toJSON([
+			'refreshToken',
+			'loginRetries',
+			'isEmailVerified',
+			'lastLogin',
+			'password',
+			'__v',
+			'createdAt',
+			'updatedAt',
+		]),
+		'Sign in successful'
+	);
 });

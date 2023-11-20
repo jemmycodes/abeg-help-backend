@@ -3,6 +3,7 @@ import type { SignOptions } from 'jsonwebtoken';
 import { Document, Model } from 'mongoose';
 
 interface IUser extends Document {
+	accessToken?: string;
 	firstName: string;
 	lastName: string;
 	email: string;

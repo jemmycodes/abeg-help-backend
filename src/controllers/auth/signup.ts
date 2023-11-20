@@ -1,4 +1,4 @@
-import { JWTExpiresIn, Provider } from '@/common/constants';
+import { Provider } from '@/common/constants';
 import { setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
@@ -31,28 +31,29 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	const accessToken = await user.generateAccessToken();
 	const refreshToken = await user.generateRefreshToken();
 
-	setCookie(res, 'abegAccessToken', accessToken, {
-		maxAge: JWTExpiresIn.Access / 1000,
+	setCookie(res, 'abegAccessToken', accessToken!, {
+		maxAge: 15 * 60 * 1000, // 15 minutes
 	});
 
 	setCookie(res, 'abegRefreshToken', refreshToken, {
-		maxAge: JWTExpiresIn.Refresh / 1000,
+		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
-
-	console.log(user);
 
 	await setCache(user._id.toString(), user.toJSON(['password']));
 
 	AppResponse(
 		res,
 		201,
-		{
-			user: user.toJSON(),
-			tokens: {
-				accessToken,
-				refreshToken,
-			},
-		},
+		user.toJSON([
+			'refreshToken',
+			'loginRetries',
+			'isEmailVerified',
+			'lastLogin',
+			'password',
+			'__v',
+			'createdAt',
+			'updatedAt',
+		]),
 		'Account created successfully'
 	);
 });

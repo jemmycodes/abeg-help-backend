@@ -1,5 +1,5 @@
 import { ENVIRONMENT } from '@/common/config';
-import { Gender, IDType, JWTExpiresIn, Role } from '@/common/constants';
+import { Gender, IDType, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		phoneNumber: {
 			type: String,
 			unique: true,
-			select: false,
 			required: [true, 'Phone number is required'],
 		},
 		photo: {
@@ -51,12 +50,10 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: String,
 			enum: Object.values(Role),
 			default: Role.User,
-			select: false,
 		},
 		isProfileComplete: {
 			type: Boolean,
 			default: false,
-			select: false,
 		},
 		providers: {
 			type: [String], /// refactor later
@@ -91,33 +88,27 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		gender: {
 			type: String,
 			enum: Object.values(Gender),
-			select: false,
 			required: [true, 'Gender is required'],
 		},
 		verificationMethod: {
 			type: String,
 			enum: Object.values(IDType),
-			select: false,
 		},
 		isIdVerified: {
 			type: Boolean,
 			default: false,
-			select: false,
 		},
 		isSuspended: {
 			type: Boolean,
 			default: false,
-			select: false,
 		},
 		isEmailVerified: {
 			type: Boolean,
 			default: false,
-			select: false,
 		},
 		isMobileVerified: {
 			type: Boolean,
 			default: false,
-			select: false,
 		},
 		isDeleted: {
 			type: Boolean,
@@ -127,14 +118,17 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		lastLogin: {
 			type: Date,
 			select: false,
+			default: Date.now(),
 		},
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+	}
 );
 
-// only pick users that have are not deleted || suspended
+// only pick users that are not deleted or suspended
 userSchema.pre(/^find/, function (this: Model<IUser>, next) {
-	this.find({ isDeleted: { $ne: true } });
+	this.find({ isDeleted: { $ne: true }, isSuspended: { $ne: true } });
 	next();
 });
 
@@ -159,6 +153,7 @@ userSchema.pre('save', async function (next) {
 	if (this.password && this.isModified('password')) {
 		this.password = await bcrypt.hash(this.password, 12);
 	}
+
 	next();
 });
 
@@ -193,7 +188,7 @@ userSchema.method('toJSON', function (this: HydratedDocument<IUser>, fields?: Ar
 userSchema.method('generateAccessToken', function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
 	const accessToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.ACCESS_KEY, {
 		...options,
-		expiresIn: JWTExpiresIn.Access,
+		expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS,
 	});
 	return accessToken;
 });
@@ -201,7 +196,7 @@ userSchema.method('generateAccessToken', function (this: HydratedDocument<IUser>
 userSchema.method('generateRefreshToken', async function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
 	const refreshToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.REFRESH_KEY, {
 		...options,
-		expiresIn: JWTExpiresIn.Refresh,
+		expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH,
 	});
 	this.refreshToken = refreshToken;
 	// to enable refresh token is saved in the database

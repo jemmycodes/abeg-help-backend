@@ -19,4 +19,8 @@ export interface IEnvironment {
 		ACCESS_KEY: string;
 		REFRESH_KEY: string;
 	};
+	JWT_EXPIRES_IN: {
+		ACCESS: string;
+		REFRESH: string;
+	};
 }
