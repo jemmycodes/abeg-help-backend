@@ -7,8 +7,6 @@ import { CastError, Error as MongooseError } from 'mongoose';
 // Define custom error types
 type CustomError = AppError | MongooseError; // Add more custom error types as needed
 
-type ErrorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => void;
-
 // Error handling functions
 const handleMongooseCastError = (err: CastError, req: Request, res: Response, next: NextFunction) => {
 	const message = `Invalid ${err.path} value "${err.value}".`;
@@ -76,7 +74,8 @@ const sendErrorProd = (err: AppError, res: Response) => {
 	}
 };
 
-const errorHandler: ErrorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
+	console.log(err instanceof AppError);
 	if (err instanceof AppError) {
 		const { statusCode, message } = err;
 		logger.error(`${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
