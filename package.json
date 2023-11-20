@@ -54,6 +54,7 @@
 		"morgan": "^1.10.0",
 		"npm": "^10.2.4",
 		"resend": "^1.1.0",
+		"ts-custom-error": "^3.3.1",
 		"tsconfig-paths": "^3.14.1",
 		"winston": "^3.10.0",
 		"xss-clean": "^0.1.4",
