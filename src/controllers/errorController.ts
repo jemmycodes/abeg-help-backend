@@ -2,7 +2,7 @@ import { ENVIRONMENT } from '@/common/config';
 import AppError from '@/common/utils/appError';
 import { logger } from '@/common/utils/logger';
 import { NextFunction, Request, Response } from 'express';
-import mongoose, { CastError, Error as MongooseError } from 'mongoose';
+import { CastError, Error as MongooseError } from 'mongoose';
 
 // Define custom error types
 type CustomError = AppError | MongooseError; // Add more custom error types as needed
@@ -86,7 +86,7 @@ const errorHandler: ErrorHandler = (err, req, res, next) => {
 		} else {
 			sendErrorDev(err, res);
 		}
-	} else if (err instanceof mongoose.Error.CastError) {
+	} else if (err instanceof MongooseError.CastError) {
 		handleMongooseCastError(err, req, res, next);
 	} else if (err instanceof MongooseError.ValidationError) {
 		handleMongooseValidationError(err, req, res, next);

@@ -6,6 +6,7 @@ export default class AppError extends Error {
 
 	constructor(message: string, statusCode: number = 400, data?: unknown) {
 		super(message);
+		// Object.setPrototypeOf(this, AppError.prototype);
 
 		this.statusCode = statusCode;
 		this.status = `${statusCode}`.startsWith('5') ? 'Failed' : 'Error';
@@ -13,6 +14,5 @@ export default class AppError extends Error {
 		this.data = data;
 
 		Error.captureStackTrace(this, this.constructor);
-		Object.setPrototypeOf(this, AppError.prototype);
 	}
 }
