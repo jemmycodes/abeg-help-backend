@@ -3,7 +3,8 @@ import { z } from 'zod';
 
 const verifyPhoneNumber = (value: string) => {
 	const phoneUtil = PhoneNumberUtil.getInstance();
-	const number = phoneUtil.parse(value.includes('+') ? value : `+${value}`, 'NG');
+	if (!value.includes('234') || value.includes('+')) return false;
+	const number = phoneUtil.parse(`+${value}`, 'NG');
 	return phoneUtil.isValidNumber(number);
 };
 
@@ -42,9 +43,12 @@ export const mainSchema = z
 			.regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/, {
 				message: `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character or symbol`,
 			}),
-		phoneNumber: z.string().refine((value) => verifyPhoneNumber(value), {
-			message: 'Invalid Nigerian phone number.',
-		}),
+		phoneNumber: z
+			.string()
+			.min(10, 'Last name must be at least 10 characters long')
+			.refine((value) => verifyPhoneNumber(value), {
+				message: 'Invalid nigerian phone number. e.g valid format: 234xxxxxxxxxx',
+			}),
 		gender: z.enum(['male', 'female', 'other', 'none'], {
 			errorMap: () => ({ message: 'Please choose one of the gender options' }),
 		}),

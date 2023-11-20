@@ -198,12 +198,14 @@ userSchema.method('generateAccessToken', function (this: HydratedDocument<IUser>
 	return accessToken;
 });
 
-userSchema.method('generateRefreshToken', function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
+userSchema.method('generateRefreshToken', async function (this: HydratedDocument<IUser>, options: SignOptions = {}) {
 	const refreshToken = jwt.sign({ id: this._id }, ENVIRONMENT.JWT.REFRESH_KEY, {
 		...options,
 		expiresIn: JWTExpiresIn.Refresh,
 	});
 	this.refreshToken = refreshToken;
+	// to enable refresh token is saved in the database
+	await this.save();
 	return refreshToken;
 });
 

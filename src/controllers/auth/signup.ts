@@ -28,8 +28,8 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		providers: Provider.Local,
 	});
 
-	const accessToken = user.generateAccessToken();
-	const refreshToken = user.generateRefreshToken();
+	const accessToken = await user.generateAccessToken();
+	const refreshToken = await user.generateRefreshToken();
 
 	setCookie(res, 'abegAccessToken', accessToken, {
 		maxAge: JWTExpiresIn.Access / 1000,
@@ -39,7 +39,20 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		maxAge: JWTExpiresIn.Refresh / 1000,
 	});
 
-	await setCache(user._id.toString(), user.toJSON([]));
+	console.log(user);
 
-	AppResponse(res, 201, user.toJSON(), 'Account created successfully');
+	await setCache(user._id.toString(), user.toJSON(['password']));
+
+	AppResponse(
+		res,
+		201,
+		{
+			user: user.toJSON(),
+			tokens: {
+				accessToken,
+				refreshToken,
+			},
+		},
+		'Account created successfully'
+	);
 });

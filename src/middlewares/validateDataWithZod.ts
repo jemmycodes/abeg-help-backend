@@ -1,10 +1,12 @@
+import AppError from '@/common/utils/appError';
 import { baseSchema, mainSchema } from '@/schemas';
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
+import { catchAsync } from './catchAsyncErrors';
 
 type MyDataShape = z.infer<typeof baseSchema>;
 
-const validateDataWithZod = (req: Request, res: Response, next: NextFunction) => {
+const validateDataWithZod = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	const rawData = req.body as Partial<MyDataShape>;
 	if (!rawData) return next();
 
@@ -27,8 +29,9 @@ const validateDataWithZod = (req: Request, res: Response, next: NextFunction) =>
 			error: 'Validation error',
 			details: errorDetails,
 		};
-
-		return res.status(422).json(errorResponse);
+		console.log('here');
+		// return res.status(422).json(errorResponse);
+		throw new AppError('Validation failed', 422, errorResponse);
 	}
 
 	// Create a new schema from mainSchema that only includes the fields present in req.body
@@ -57,16 +60,18 @@ const validateDataWithZod = (req: Request, res: Response, next: NextFunction) =>
 			errorDetails[fieldName].push(error.message);
 		}
 
-		return res.status(422).json({
-			status: 'error',
-			error: 'Validation error',
-			details: errorDetails,
-		});
+		// return res.status(422).json({
+		// 	status: 'error',
+		// 	error: 'Validation error',
+		// 	details: errorDetails,
+		// });
+
+		throw new AppError('Validation failed', 422, errorDetails);
 	} else {
 		req.body = mainResult.data as MyDataShape;
 	}
 
 	next();
-};
+});
 
 export { validateDataWithZod };

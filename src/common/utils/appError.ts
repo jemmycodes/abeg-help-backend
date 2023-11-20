@@ -2,9 +2,9 @@ export default class AppError extends Error {
 	statusCode: number;
 	status: string;
 	isOperational: boolean;
-	data?: string;
+	data?: unknown;
 
-	constructor(message: string, statusCode: number = 400, data?: string) {
+	constructor(message: string, statusCode: number = 400, data?: unknown) {
 		super(message);
 
 		this.statusCode = statusCode;

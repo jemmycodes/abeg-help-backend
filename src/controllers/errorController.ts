@@ -55,6 +55,7 @@ const sendErrorDev = (err: AppError, res: Response) => {
 		status: err.status,
 		message: err.message,
 		stack: err.stack,
+		error: err.data,
 	});
 };
 
@@ -63,6 +64,7 @@ const sendErrorProd = (err: AppError, res: Response) => {
 		res.status(err.statusCode).json({
 			status: err.status,
 			message: err.message,
+			error: err.data,
 		});
 	} else {
 		console.error('ERROR 💥', err);
