@@ -1,3 +1,4 @@
+import { ENVIRONMENT } from '@/common/config';
 import { generateRandomString, hashData } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
@@ -28,7 +29,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 	}
 
 	const passwordResetToken = hashData(generateRandomString());
-	const passwordResetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${passwordResetToken}`;
+	const passwordResetUrl = `${ENVIRONMENT.FRONTEND_URL}/reset-password?token=${passwordResetToken}`;
 
 	await User.findByIdAndUpdate(user._id, {
 		passwordResetToken,
