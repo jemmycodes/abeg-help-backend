@@ -15,7 +15,11 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 
 	const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
 	if (existingUser) {
-		throw new AppError(`${existingUser.email === email ? 'Email' : 'Phone number'} has already been used`, 409);
+		if (existingUser.email === email && existingUser.phoneNumber === phoneNumber) {
+			throw new AppError('Email and phone number has already been used', 409);
+		} else {
+			throw new AppError(`${existingUser.email === email ? 'Email' : 'Phone number'} has already been used`, 409);
+		}
 	}
 
 	const user = await User.create({
