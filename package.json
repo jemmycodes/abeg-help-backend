@@ -7,7 +7,7 @@
 		"pre-commit": "lint-staged",
 		"prepare": "husky install",
 		"start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register build/server.js",
-		"start:prod": "node build/server.js",
+		"start-prod": "node build/server.js",
 		"build": "tsc",
 		"dev": "nodemon",
 		"watch": "tsc --watch & nodemon build/index.js",
