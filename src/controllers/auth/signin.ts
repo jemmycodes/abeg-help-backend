@@ -19,7 +19,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	);
 
 	if (!user) {
-		throw new AppError('Email is incorrect', 401);
+		throw new AppError('Email or password is incorrect', 401);
 	}
 
 	// check if user has exceeded login retries (3 times in 12 hours)
@@ -36,7 +36,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 		await User.findByIdAndUpdate(user._id, {
 			$inc: { loginRetries: 1 },
 		});
-		throw new AppError('Password is incorrect', 401);
+		throw new AppError('Email or password is incorrect', 401);
 	}
 
 	if (!user.isEmailVerified) {

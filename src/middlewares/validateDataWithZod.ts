@@ -7,6 +7,8 @@ import { catchAsync } from './catchAsyncErrors';
 type MyDataShape = z.infer<typeof baseSchema>;
 
 const validateDataWithZod = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+	if (req.method === 'GET') return next();
+	if (req.url === '/api/v1/auth/signin') return next();
 	const rawData = req.body as Partial<MyDataShape>;
 	if (!rawData) return next();
 
