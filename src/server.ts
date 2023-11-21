@@ -1,3 +1,5 @@
+require('module-alias/register');
+
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/controllers/errorController';

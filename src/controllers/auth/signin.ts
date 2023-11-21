@@ -1,11 +1,11 @@
 import { Provider } from '@/common/constants';
+import { setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models/userModel';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import { setCache, setCookie } from 'src/common/utils';
 
 export const signIn = catchAsync(async (req: Request, res: Response) => {
 	const { email, password } = req.body as { email: string; password: string };
