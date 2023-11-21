@@ -163,7 +163,9 @@ app.all('/*', async (req, res) => {
 	logger.error('route not found ' + new Date(Date.now()) + ' ' + req.originalUrl);
 	res.status(404).json({
 		status: 'error',
-		message: `OOPs!! Server can't find ${req.url}. This could be a typographical issue. Check the API documentation for further guidance`,
+		message: `OOPs!! No handler defined for ${req.method.toUpperCase()}: ${
+			req.url
+		} route. Check the API documentation for more details.`,
 	});
 });
 
