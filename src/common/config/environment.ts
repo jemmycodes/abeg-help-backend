@@ -1,6 +1,4 @@
 import { IEnvironment } from '@/common/interfaces/environment';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 export const ENVIRONMENT: IEnvironment = {
 	APP: {
