@@ -1,5 +1,6 @@
-require('module-alias/register');
-
+if (process.env.NODE_ENV === 'production') {
+	require('module-alias/register');
+}
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/controllers/errorController';

@@ -27,7 +27,7 @@ const setCookie = (res: Response, name: string, value: string | number, options:
 	});
 };
 
-const setCache = async (key: string, value: string | number | object | Buffer) => {
+const setCache = async (key: string, value: string | number | object | Buffer, expiry?: number) => {
 	if (!key) {
 		throw new Error('Invalid key provided');
 	}
@@ -37,6 +37,10 @@ const setCache = async (key: string, value: string | number | object | Buffer) =
 
 	if (typeof value === 'object' && !(value instanceof Buffer)) {
 		value = JSON.stringify(value);
+	}
+
+	if (expiry) {
+		return await redis.set(key, value, 'EX', expiry);
 	}
 
 	return await redis.set(key, value);

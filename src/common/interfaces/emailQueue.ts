@@ -1,10 +1,11 @@
 export interface CommonDataFields {
 	to: string;
-	priority: string;
+	priority?: string;
 }
 
 export interface WelcomeEmailData extends CommonDataFields {
-	// Add other specific fields for the welcome email
+	name: string;
+	verificationLink: string;
 }
 
 export interface ResetPasswordData extends CommonDataFields {

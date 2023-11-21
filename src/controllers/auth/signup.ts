@@ -1,9 +1,11 @@
+import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { setCache, setCookie } from '@/common/utils';
+import { generateRandomString, hashData, setCache, setCookie } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
+import { addEmailToQueue } from '@/queues/emailQueue';
 import { Request, Response } from 'express';
 
 export const signUp = catchAsync(async (req: Request, res: Response) => {
@@ -43,6 +45,22 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
 
+	// add welcome email to queue for user to verify account
+	const emailVerificationToken = await hashData(generateRandomString());
+
+	addEmailToQueue({
+		type: 'welcomeEmail',
+		data: {
+			to: email,
+			name: user.firstName,
+			verificationLink: `${ENVIRONMENT.APP.CLIENT}/verify-email/${user._id}?token=${emailVerificationToken}`,
+		},
+	});
+
+	// save email token to cache
+	await setCache(`verification:${user._id.toString()}`, emailVerificationToken, 3600);
+
+	// save user to cache without password
 	await setCache(user._id.toString(), user.toJSON(['password']));
 
 	AppResponse(

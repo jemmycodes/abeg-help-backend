@@ -2,7 +2,7 @@ import { ENVIRONMENT } from '@/common/config';
 import { EmailJobData } from '@/common/interfaces/emailQueue';
 import { logger } from '@/common/utils';
 import { Resend } from 'resend';
-import { passwordResetComplete } from '../templates/passwordResetComplete';
+import { passwordResetComplete, welcomeEmail } from '../templates';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
@@ -16,6 +16,11 @@ const TEMPLATES = {
 		subject: 'Reset Password',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: passwordResetComplete,
+	},
+	welcomeEmail: {
+		subject: 'Welcome to AbegHelp',
+		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		template: welcomeEmail,
 	},
 };
 

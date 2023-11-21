@@ -3,7 +3,6 @@ import type { SignOptions } from 'jsonwebtoken';
 import { Document, Model } from 'mongoose';
 
 interface IUser extends Document {
-	accessToken?: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -14,6 +13,7 @@ interface IUser extends Document {
 	isProfileComplete: boolean;
 	providers: Provider[];
 	phoneNumber: string;
+	verificationToken: string;
 	passwordResetToken: string;
 	passwordResetExpires: Date;
 	passwordResetRetries: number;

@@ -120,6 +120,10 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			select: false,
 			default: Date.now(),
 		},
+		verificationToken: {
+			type: String,
+			select: false,
+		},
 	},
 	{
 		timestamps: true,
