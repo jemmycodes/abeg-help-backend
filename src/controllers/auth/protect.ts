@@ -94,7 +94,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 
 				(req as CustomRequest).user = currentUser;
 			} catch (error) {
-				next(new AppError('Invalid token, please log in again', 401));
+				next(new AppError('Session expired, please log in again', 401));
 			}
 		} else {
 			next(new AppError('Invalid token, please log in again', 401));
