@@ -72,16 +72,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	AppResponse(
 		res,
 		201,
-		user.toJSON([
-			'refreshToken',
-			'loginRetries',
-			'isEmailVerified',
-			'lastLogin',
-			'password',
-			'__v',
-			'createdAt',
-			'updatedAt',
-		]),
+		user.toJSON(['refreshToken', 'loginRetries', 'isEmailVerified', 'lastLogin', 'password', 'createdAt', 'updatedAt']),
 		'Account created successfully'
 	);
 });

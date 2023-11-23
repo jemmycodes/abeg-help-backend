@@ -1,5 +1,5 @@
 import { ENVIRONMENT } from '@/common/config';
-import { Gender, IDType, Role } from '@/common/constants';
+import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -56,7 +56,9 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			default: false,
 		},
 		providers: {
-			type: [String], /// refactor later
+			type: String,
+			enum: Object.values(Provider),
+			default: Provider.Local,
 			select: false,
 		},
 		passwordResetToken: {
@@ -127,6 +129,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 	},
 	{
 		timestamps: true,
+		versionKey: false,
 	}
 );
 
