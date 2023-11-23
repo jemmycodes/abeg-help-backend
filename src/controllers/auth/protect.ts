@@ -9,8 +9,8 @@ import { UserModel as User } from '@/models';
 import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { DateTime } from 'luxon';
-import { promisify } from 'util';
 import type { Require_id } from 'mongoose';
+import { promisify } from 'util';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 	// get the cookies from the request headers
@@ -97,6 +97,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 				next(new AppError('Session expired, please log in again', 401));
 			}
 		} else {
+			// clear session cookies and remove refresh token from db and cache
 			next(new AppError('Invalid token, please log in again', 401));
 		}
 	}
