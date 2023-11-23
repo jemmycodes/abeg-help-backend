@@ -11,7 +11,7 @@ interface IUser {
 	photo: string;
 	role: Role;
 	isProfileComplete: boolean;
-	providers: Provider;
+	provider: Provider;
 	phoneNumber: string;
 	verificationToken: string;
 	passwordResetToken: string;

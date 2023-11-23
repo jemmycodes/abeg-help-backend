@@ -36,7 +36,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		phoneNumber,
 		password: hashedPassword,
 		gender,
-		providers: Provider.Local,
+		provider: Provider.Local,
 	});
 
 	const accessToken = await user.generateAccessToken();

@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: Boolean,
 			default: false,
 		},
-		providers: {
+		provider: {
 			type: String,
 			enum: Object.values(Provider),
 			default: Provider.Local,
