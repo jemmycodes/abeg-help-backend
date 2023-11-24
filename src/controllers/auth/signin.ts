@@ -9,13 +9,12 @@ import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
 export const signIn = catchAsync(async (req: Request, res: Response) => {
-	const { email, password } = req.body as { email: string; password: string };
-
+	const { email, password } = req.body;
 	if (!email || !password) {
 		throw new AppError('Email and password are required fields', 401);
 	}
 
-	const user = await User.findOne({ email, providers: Provider.Local }).select(
+	const user = await User.findOne({ email, provider: Provider.Local }).select(
 		'+refreshToken +loginRetries +isSuspended +isEmailVerified +lastLogin +password'
 	);
 
@@ -29,10 +28,10 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 
 	if (user.loginRetries >= 3 && Math.round(lastLoginRetry.hours) < 12) {
 		throw new AppError('login retries exceeded!', 401);
+		// send an email to user to reset password
 	}
 
 	const isPasswordValid = await user.verifyPassword(password);
-
 	if (!isPasswordValid) {
 		await User.findByIdAndUpdate(user._id, {
 			$inc: { loginRetries: 1 },
