@@ -60,7 +60,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		data: {
 			to: email,
 			name: user.firstName,
-			verificationLink: `${ENVIRONMENT.APP.CLIENT}/verify-email/${user._id}?token=${emailVerificationToken}`,
+			verificationLink: `${ENVIRONMENT.FRONTEND_URL}/verify-email/${user._id}?token=${emailVerificationToken}`,
 		},
 	});
 
