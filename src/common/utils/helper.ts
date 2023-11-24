@@ -14,11 +14,13 @@ if (!ENVIRONMENT.CACHE_REDIS.URL) {
 const redis = new Redis(ENVIRONMENT.CACHE_REDIS.URL!);
 
 const toJSON = (obj: IUser, fields?: string[]): Partial<IUser> => {
+	const user = JSON.parse(JSON.stringify(obj));
+
 	if (fields && fields.length === 0) {
-		return obj;
+		return user;
 	}
 
-	const results = { ...obj };
+	const results = { ...user };
 
 	if (fields && fields.length > 0) {
 		for (const field of fields) {
@@ -30,7 +32,7 @@ const toJSON = (obj: IUser, fields?: string[]): Partial<IUser> => {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { refreshToken, loginRetries, lastLogin, password, updatedAt, ...rest } = obj;
+	const { refreshToken, loginRetries, lastLogin, password, updatedAt, ...rest } = user;
 	return rest;
 };
 
