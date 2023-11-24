@@ -1,5 +1,6 @@
+import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
-import { setCache, setCookie } from '@/common/utils';
+import { hashData, setCache, setCookie, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -47,28 +48,28 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 		throw new AppError('Your account is currently suspended', 401);
 	}
 
-	const refreshToken = user.generateRefreshToken();
-	const accessToken = user.generateAccessToken();
-
-	setCookie(res, 'abegAccessToken', accessToken!, {
+	// generate access and refresh tokens and set cookies
+	const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
+	setCookie(res, 'abegAccessToken', accessToken, {
 		maxAge: 15 * 60 * 1000, // 15 minutes
 	});
 
+	const refreshToken = await hashData(
+		{ id: user._id.toString() },
+		{ expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.REFRESH },
+		ENVIRONMENT.JWT.REFRESH_KEY
+	);
 	setCookie(res, 'abegRefreshToken', refreshToken, {
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
 
 	// update user loginRetries to 0 and lastLogin to current time
 	await User.findByIdAndUpdate(user._id, {
-		$inc: { loginRetries: 0 },
+		loginRetries: 0,
 		lastLogin: DateTime.now(),
+		refreshToken,
 	});
 
-	await setCache(user._id.toString(), user.toJSON(['password']));
-	AppResponse(
-		res,
-		201,
-		user.toJSON(['refreshToken', 'loginRetries', 'isEmailVerified', 'lastLogin', 'password', 'createdAt', 'updatedAt']),
-		'Sign in successful'
-	);
+	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
+	AppResponse(res, 201, toJSON(user), 'Sign in successful');
 });
