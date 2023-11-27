@@ -1,10 +1,10 @@
-import { Response } from 'express';
+import { CustomRequest, IUser } from '@/common/interfaces';
 import { setCache, toJSON } from '@/common/utils';
+import AppError from '@/common/utils/appError';
+import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
 import { UserModel as User } from '@/models';
-import { CustomRequest, IUser } from '@/common/interfaces';
-import { AppResponse } from '@/common/utils/appResponse';
-import AppError from '@/common/utils/appError';
+import { Response } from 'express';
 
 export const editUserProfile = catchAsync(async (req: CustomRequest, res: Response) => {
 	//collect the details to be updated
@@ -33,6 +33,6 @@ export const editUserProfile = catchAsync(async (req: CustomRequest, res: Respon
 		return AppResponse(res, 404, null, 'User not found for update');
 	}
 
-	await setCache(`Updated User: ${updatedUser?._id.toString()}`, toJSON(updatedUser), 3600);
+	await setCache(`Updated User: ${updatedUser?._id.toString()}`, toJSON(updatedUser, ['password']), 3600);
 	AppResponse(res, 200, updatedUser, 'Profile Successfully Updated');
 });
