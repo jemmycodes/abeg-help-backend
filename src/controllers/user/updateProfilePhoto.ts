@@ -1,10 +1,10 @@
-import { catchAsync } from '@/middlewares';
 import { CustomRequest, IUser } from '@/common/interfaces';
-import { Response } from 'express';
-import AppError from '@/common/utils/appError';
 import { AppResponse, getFromCache, setCache, toJSON, uploadSingleFile } from '@/common/utils';
-import { DateTime } from 'luxon';
+import AppError from '@/common/utils/appError';
+import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
+import { Response } from 'express';
+import { DateTime } from 'luxon';
 import { Require_id } from 'mongoose';
 
 export const updateProfilePhoto = catchAsync(async (req: CustomRequest, res: Response) => {
@@ -37,10 +37,7 @@ export const updateProfilePhoto = catchAsync(async (req: CustomRequest, res: Res
 
 	if (userFromCache) {
 		// update cache
-		await setCache(updatedUser._id.toString()!, {
-			...toJSON(userFromCache, []),
-			photo: updatedUser.photo,
-		});
+		await setCache(updatedUser._id.toString()!, toJSON({ ...userFromCache, photo: updatedUser.photo }, []));
 	}
 
 	return AppResponse(res, 200, updatedUser, 'Profile photo updated successfully');
