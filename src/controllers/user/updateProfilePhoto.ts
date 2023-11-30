@@ -1,13 +1,13 @@
-import { CustomRequest, IUser } from '@/common/interfaces';
+import { IUser } from '@/common/interfaces';
 import { AppResponse, getFromCache, setCache, toJSON, uploadSingleFile } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
-import { Response } from 'express';
+import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 import { Require_id } from 'mongoose';
 
-export const updateProfilePhoto = catchAsync(async (req: CustomRequest, res: Response) => {
+export const updateProfilePhoto = catchAsync(async (req: Request, res: Response) => {
 	const { file } = req;
 	const userId = req.user?._id;
 
