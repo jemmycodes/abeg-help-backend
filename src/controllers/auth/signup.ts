@@ -51,6 +51,9 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	});
 	await sendVerificationEmail(user);
 
+	// delete user from collection
+	await User.findByIdAndDelete(user._id);
+
 	// save user to cache without password
 	await setCache(user._id.toString(), { ...toJSON(user, ['password']), refreshToken });
 	AppResponse(res, 201, toJSON(user), 'Account created successfully');
