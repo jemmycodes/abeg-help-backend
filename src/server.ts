@@ -14,7 +14,6 @@ import { createBullBoard } from '@bull-board/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import compression from 'compression';
-import cookie from 'cookie';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
@@ -27,7 +26,6 @@ import http from 'http';
 import morgan from 'morgan';
 import { Server, Socket } from 'socket.io';
 import xss from 'xss-clean';
-import { authenticate } from './common/utils/authenticate';
 import socketController from './controllers/sockets';
 import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
@@ -214,28 +212,24 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 io.use(
-	catchSocketAsync(async (socket: Socket, next) => {
+	catchSocketAsync(async () => {
 		// Parse the cookies from the socket
-		const cookies = cookie.parse(socket.handshake.headers.cookie || '');
-
+		// const cookies = cookie.parse(socket.handshake.headers.cookie || '');
 		// Check if cookies is defined
-		if (cookies) {
-			// Extract the access and refresh tokens
-			const { abegAccessToken, abegRefreshToken } = cookies;
-
-			// Send the tokens to the authenticate helper function
-			const { currentUser } = await authenticate({ abegAccessToken, abegRefreshToken });
-
-			// Attach the user to the socket object
-			socket.user = currentUser;
-
-			if (next) {
-				next();
-			}
-		} else {
-			console.log('No cookie sent with sockets ' + socket.id);
-			throw new Error('Authentication error');
-		}
+		// if (cookies) {
+		// 	// Extract the access and refresh tokens
+		// 	const { abegAccessToken, abegRefreshToken } = cookies;
+		// 	// Send the tokens to the authenticate helper function
+		// 	const { currentUser } = await authenticate({ abegAccessToken, abegRefreshToken });
+		// 	// Attach the user to the socket object
+		// 	socket.user = currentUser;
+		// 	if (next) {
+		// 		next();
+		// 	}
+		// } else {
+		// 	console.log('No cookie sent with sockets ' + socket.id);
+		// 	throw new Error('Authentication error');
+		// }
 	})
 );
 
