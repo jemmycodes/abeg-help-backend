@@ -21,8 +21,7 @@ export const resendVerification = catchAsync(async (req: Request, res: Response)
 	if (user.isEmailVerified) {
 		throw new AppError('Email already verified', 400);
 	}
-
-	await sendVerificationEmail(user);
+	await sendVerificationEmail(user, req);
 
 	return AppResponse(res, 200, null, `Verification link sent to ${email}`);
 });

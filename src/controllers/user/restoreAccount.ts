@@ -1,10 +1,9 @@
+import { Request, Response } from 'express';
 import { AppResponse, decodeData } from '../../common/utils';
 import AppError from '../../common/utils/appError';
 import { catchAsync } from '../../middlewares';
-import { Request, Response } from 'express';
 import { UserModel } from '../../models';
 import { addEmailToQueue } from '../../queues/emailQueue';
-import { ENVIRONMENT } from '../../common/config';
 
 export const restoreAccount = catchAsync(async (req: Request, res: Response) => {
 	const { token } = req.query;
@@ -41,13 +40,16 @@ export const restoreAccount = catchAsync(async (req: Request, res: Response) => 
 			},
 		}
 	);
+	// Get the protocol and host from the request
+	const protocol = req.protocol;
+	const host = req.headers.host;
 
 	await addEmailToQueue({
 		type: 'restoreAccount',
 		data: {
 			to: user.email,
 			name: user?.firstName || user?.lastName || 'User',
-			loginLink: `${ENVIRONMENT.FRONTEND_URL}/login`,
+			loginLink: `${protocol}://${host}/login`,
 		},
 	});
 

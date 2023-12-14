@@ -50,7 +50,7 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	setCookie(res, 'abegRefreshToken', refreshToken, {
 		maxAge: 24 * 60 * 60 * 1000, // 24 hours
 	});
-	await sendVerificationEmail(user);
+	await sendVerificationEmail(user, req);
 
 	// delete user from collection
 	// TODO:review this

@@ -71,7 +71,7 @@ const sendErrorProd = (err: AppError, res: Response) => {
 
 const errorHandler = (err, req, res, next) => {
 	err.statusCode = err.statusCode || 500;
-	err.status = err.status || 'error';
+	err.status = err.status || 'Error';
 
 	if (ENVIRONMENT.APP.ENV === 'development') {
 		logger.error(`${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);

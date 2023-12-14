@@ -40,7 +40,7 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 	}
 
 	if (!user.isEmailVerified) {
-		await sendVerificationEmail(user);
+		await sendVerificationEmail(user, req);
 		throw new AppError('Your email is yet to be verified', 401);
 	}
 

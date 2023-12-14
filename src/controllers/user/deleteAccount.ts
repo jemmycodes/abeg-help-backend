@@ -1,9 +1,8 @@
-import { ENVIRONMENT } from '../../common/config';
+import { Request, Response } from 'express';
 import { AppResponse, generateRandomString, hashData, setCache, setCookie } from '../../common/utils';
 import AppError from '../../common/utils/appError';
 import { catchAsync } from '../../middlewares';
 import { UserModel } from '../../models';
-import { Request, Response } from 'express';
 import { addEmailToQueue } from '../../queues/emailQueue';
 
 export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
@@ -28,8 +27,10 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 		isDeleted: true,
 		accountRestoreToken: accountRestorationToken,
 	});
-
-	const accountRestorationUrl = `${ENVIRONMENT.FRONTEND_URL}/account/restore?token=${hashedAccountRestorationToken}`;
+	// Get the protocol and host from the request
+	const protocol = req.protocol;
+	const host = req.headers.host;
+	const accountRestorationUrl = `${protocol}://${host}/account/restore?token=${hashedAccountRestorationToken}`;
 
 	addEmailToQueue({
 		type: 'deleteAccount',

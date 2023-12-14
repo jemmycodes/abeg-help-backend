@@ -3,6 +3,7 @@ import { addEmailToQueue } from '@/queues/emailQueue';
 import bcrypt from 'bcryptjs';
 import { randomBytes, randomInt } from 'crypto';
 import type { CookieOptions, Response } from 'express';
+import { Request } from 'express';
 import { encode } from 'hi-base32';
 import Redis from 'ioredis';
 import jwt, { SignOptions } from 'jsonwebtoken';
@@ -185,17 +186,20 @@ const generateRandom6DigitKey = () => {
 	return tokenString;
 };
 
-const sendVerificationEmail = async (user: Require_id<IUser>) => {
+const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 	// add welcome email to queue for user to verify account
 	const tokenString = await generateRandomString();
 	const emailVerificationToken = await hashData({ token: tokenString });
+	// Get the protocol and host from the request
+	const protocol = req.protocol;
+	const host = req.headers.host;
 
 	await addEmailToQueue({
 		type: 'welcomeEmail',
 		data: {
 			to: user.email,
 			name: user.firstName,
-			verificationLink: `${ENVIRONMENT.FRONTEND_URL}/verify-email/${user._id}?token=${emailVerificationToken}`,
+			verificationLink: `${protocol}://${host}/verify-email/${user._id}?token=${emailVerificationToken}`,
 		},
 	});
 
