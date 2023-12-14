@@ -196,7 +196,9 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 		data: {
 			to: user.email,
 			name: user.firstName,
-			verificationLink: `${req.protocol}://${req.get('host')}/verify-email/${user._id}?token=${emailVerificationToken}`,
+			verificationLink: `${req.protocol}://${req.get('Referrer')}/verify-email/${
+				user._id
+			}?token=${emailVerificationToken}`,
 		},
 	});
 

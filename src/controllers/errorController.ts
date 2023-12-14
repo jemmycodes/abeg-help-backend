@@ -83,7 +83,7 @@ const errorHandler = (err, req, res, next) => {
 		if ('timeout' in err && err.timeout) error = handleTimeoutError();
 		if (err.name === 'JsonWebTokenError') error = handleJWTError();
 		if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
-		if ('code' in err && err.code === 11000) error = handleMongooseDuplicateFieldsError(err, req, res, next);
+		if ((err as MongooseError) && err.code === 11000) error = handleMongooseDuplicateFieldsError(err, req, res, next);
 
 		sendErrorProd(error, res);
 	}

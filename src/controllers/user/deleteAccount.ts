@@ -29,7 +29,7 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 	});
 
 	const accountRestorationUrl = `${req.protocol}://${req.get(
-		'host'
+		'Referrer'
 	)}/account/restore?token=${hashedAccountRestorationToken}`;
 
 	addEmailToQueue({
