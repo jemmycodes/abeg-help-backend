@@ -32,10 +32,8 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response) => 
 	const hashedPasswordResetToken = hashData({
 		token: passwordResetToken,
 	});
-	// Get the protocol and host from the request
-	const protocol = req.protocol;
-	const host = req.headers.host;
-	const passwordResetUrl = `${protocol}://${host}/reset-password?token=${hashedPasswordResetToken}`;
+
+	const passwordResetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${hashedPasswordResetToken}`;
 
 	await User.findByIdAndUpdate(user._id, {
 		passwordResetToken: passwordResetToken,

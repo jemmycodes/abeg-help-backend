@@ -40,16 +40,13 @@ export const restoreAccount = catchAsync(async (req: Request, res: Response) => 
 			},
 		}
 	);
-	// Get the protocol and host from the request
-	const protocol = req.protocol;
-	const host = req.headers.host;
 
 	await addEmailToQueue({
 		type: 'restoreAccount',
 		data: {
 			to: user.email,
 			name: user?.firstName || user?.lastName || 'User',
-			loginLink: `${protocol}://${host}/login`,
+			loginLink: `${req.protocol}://${req.get('host')}/login`,
 		},
 	});
 

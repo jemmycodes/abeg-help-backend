@@ -190,16 +190,13 @@ const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 	// add welcome email to queue for user to verify account
 	const tokenString = await generateRandomString();
 	const emailVerificationToken = await hashData({ token: tokenString });
-	// Get the protocol and host from the request
-	const protocol = req.protocol;
-	const host = req.headers.host;
 
 	await addEmailToQueue({
 		type: 'welcomeEmail',
 		data: {
 			to: user.email,
 			name: user.firstName,
-			verificationLink: `${protocol}://${host}/verify-email/${user._id}?token=${emailVerificationToken}`,
+			verificationLink: `${req.protocol}://${req.get('host')}/verify-email/${user._id}?token=${emailVerificationToken}`,
 		},
 	});
 

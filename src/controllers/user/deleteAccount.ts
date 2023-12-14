@@ -27,10 +27,10 @@ export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 		isDeleted: true,
 		accountRestoreToken: accountRestorationToken,
 	});
-	// Get the protocol and host from the request
-	const protocol = req.protocol;
-	const host = req.headers.host;
-	const accountRestorationUrl = `${protocol}://${host}/account/restore?token=${hashedAccountRestorationToken}`;
+
+	const accountRestorationUrl = `${req.protocol}://${req.get(
+		'host'
+	)}/account/restore?token=${hashedAccountRestorationToken}`;
 
 	addEmailToQueue({
 		type: 'deleteAccount',
