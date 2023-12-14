@@ -46,7 +46,7 @@ export const restoreAccount = catchAsync(async (req: Request, res: Response) => 
 		data: {
 			to: user.email,
 			name: user?.firstName || user?.lastName || 'User',
-			loginLink: `${req.protocol}://${req.get('Referrer')}/login`,
+			loginLink: `${req.get('Referrer')}/login`,
 		},
 	});
 

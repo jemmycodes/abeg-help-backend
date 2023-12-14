@@ -1,11 +1,8 @@
 import { ENVIRONMENT } from '@/common/config';
 import AppError from '@/common/utils/appError';
 import { logger } from '@/common/utils/logger';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { CastError, Error as MongooseError } from 'mongoose';
-
-// Define custom error types
-type CustomError = AppError | MongooseError; // Add more custom error types as needed
 
 // Error handling functions
 const handleMongooseCastError = (err: CastError) => {
@@ -19,12 +16,19 @@ const handleMongooseValidationError = (err: MongooseError.ValidationError) => {
 	return new AppError(message, 400);
 };
 
-const handleMongooseDuplicateFieldsError = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
+const handleMongooseDuplicateFieldsError = (err, next: NextFunction) => {
+	console.log(err);
 	// Extract value from the error message if it matches a pattern
-	const matchResult = err.message.match(/(["'])(?:(?=(\\?))\2.)*?\1/);
-	if (matchResult && matchResult.length > 0) {
-		const value = matchResult[0];
-		const message = `Duplicate field value: ${value}. Please use a different value.`;
+
+	if (err.code === 11000) {
+		const field = Object.keys(err.keyValue)[0]
+			.replace(/([a-z])([A-Z])/g, '$1 $2')
+			.split(/(?=[A-Z])/)
+			.map((word, index) => (index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word.toLowerCase()))
+			.join('');
+
+		const value = err.keyValue[field];
+		const message = `${field} "${value}" has already been used!.`;
 		return new AppError(message, 409);
 	} else {
 		next(err);
@@ -73,7 +77,7 @@ const errorHandler = (err, req, res, next) => {
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || 'Error';
 
-	if (ENVIRONMENT.APP.ENV === 'development') {
+	if (ENVIRONMENT.APP.ENV === 'developmentss') {
 		logger.error(`${err.statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 		sendErrorDev(err, res);
 	} else {
@@ -83,7 +87,7 @@ const errorHandler = (err, req, res, next) => {
 		if ('timeout' in err && err.timeout) error = handleTimeoutError();
 		if (err.name === 'JsonWebTokenError') error = handleJWTError();
 		if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
-		if ((err as MongooseError) && err.code === 11000) error = handleMongooseDuplicateFieldsError(err, req, res, next);
+		if ((err as MongooseError) && err.code === 11000) error = handleMongooseDuplicateFieldsError(err, next);
 
 		sendErrorProd(error, res);
 	}
