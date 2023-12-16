@@ -188,20 +188,16 @@ const generateRandom6DigitKey = () => {
 
 const sendVerificationEmail = async (user: Require_id<IUser>, req: Request) => {
 	// add welcome email to queue for user to verify account
-	const tokenString = await generateRandomString();
-	const emailVerificationToken = await hashData({ token: tokenString });
+	const emailVerificationToken = hashData({ id: user._id.toString() });
 
 	await addEmailToQueue({
 		type: 'welcomeEmail',
 		data: {
 			to: user.email,
 			name: user.firstName,
-			verificationLink: `${req.get('Referrer')}/verify-email/${user._id}?token=${emailVerificationToken}`,
+			verificationLink: `${req.get('Referrer')}/verify-email?token=${emailVerificationToken}`,
 		},
 	});
-
-	// save email token to cache
-	await setCache(`verification:${user._id.toString()}`, tokenString, 3600);
 };
 
 export {

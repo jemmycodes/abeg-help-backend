@@ -34,8 +34,6 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 		isTermAndConditionAccepted,
 	});
 
-	console.log('user', user);
-
 	// generate access and refresh tokens and set cookies
 	const accessToken = await hashData({ id: user._id.toString() }, { expiresIn: ENVIRONMENT.JWT_EXPIRES_IN.ACCESS });
 	setCookie(res, 'abegAccessToken', accessToken, {

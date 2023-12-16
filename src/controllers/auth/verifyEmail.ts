@@ -1,4 +1,4 @@
-import { decodeData, getFromCache, setCache, toJSON } from '@/common/utils';
+import { decodeData, setCache, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -6,24 +6,19 @@ import { UserModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-	const { token, userId } = req.body;
-	if (!token || !userId) {
-		throw new AppError('token and userId are required!', 400);
+	const { token } = req.body;
+
+	if (!token) {
+		throw new AppError('Token is required');
 	}
 
-	const validToken = await getFromCache(`verification:${userId}`);
+	const decryptedToken = await decodeData(token);
 
-	if (!validToken) {
-		throw new AppError('Invalid/expired token', 400);
+	if (!decryptedToken.id) {
+		throw new AppError('Invalid verification token');
 	}
 
-	const decodedToken = await decodeData(token);
-
-	if (!decodedToken.token || decodedToken.token !== validToken) {
-		throw new AppError('Invalid token', 400);
-	}
-
-	const updatedUser = await UserModel.findByIdAndUpdate(userId, { isEmailVerified: true }, { new: true });
+	const updatedUser = await UserModel.findByIdAndUpdate(decryptedToken.id, { isEmailVerified: true }, { new: true });
 
 	if (!updatedUser) {
 		throw new AppError('Verification failed!', 400);
