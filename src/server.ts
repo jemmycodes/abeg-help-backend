@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { ENVIRONMENT, connectDb } from '@/common/config';
+import '@/common/interfaces/IRequest';
 import { logger, stream } from '@/common/utils/logger';
 import errorHandler from '@/controllers/errorController';
 import { validateDataWithZod } from '@/middlewares';
@@ -29,7 +30,6 @@ import xss from 'xss-clean';
 import socketController from './controllers/sockets';
 import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-import '@/common/interfaces/IRequest';
 /**
  *  uncaughtException handler
  */
