@@ -81,7 +81,6 @@ app.use(limiter);
 app.use(
 	cors({
 		origin: ['https://abeghelp.me', 'http://localhost:3000', 'http://localhost:3001'],
-		methods: ['GET', 'POST'],
 		credentials: true,
 	})
 );
