@@ -1,9 +1,6 @@
-if (process.env.NODE_ENV === 'production') {
-	require('module-alias/register');
-}
+import 'module-alias/register';
 import * as dotenv from 'dotenv';
 dotenv.config();
-
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import '@/common/interfaces/IRequest';
 import { logger, stream } from '@/common/utils/logger';
