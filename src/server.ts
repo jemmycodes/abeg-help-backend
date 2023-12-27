@@ -193,7 +193,6 @@ const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
 		origin: ['https://abeghelp.me', 'http://localhost:3000', 'http://localhost:3001'],
-		methods: ['GET', 'POST'],
 		credentials: true,
 	},
 });

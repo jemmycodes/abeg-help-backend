@@ -1,7 +1,7 @@
 import {
 	completeTimeBased2fa,
-	get2faCodeViaEmail,
 	forgotPassword,
+	get2faCodeViaEmail,
 	protect,
 	resendVerification,
 	resetPassword,
