@@ -1,4 +1,4 @@
-import { Gender, IDType, Provider, Role } from '@/common/constants';
+import { Gender, IDType, Provider, Role, twoFactorTypeEnum } from '@/common/constants';
 import type { SignOptions } from 'jsonwebtoken';
 import { Model } from 'mongoose';
 
@@ -29,11 +29,12 @@ interface IUser {
 	isEmailVerified: boolean;
 	isDeleted: boolean;
 	accountRestoreToken: string;
-	timeBased2FA: {
+	twoFA: {
 		active?: boolean;
 		secret?: string;
 		recoveryCode?: string;
-		receiveCodeViaEmail?: boolean;
+		type?: twoFactorTypeEnum;
+		verificationTime?: Date;
 	};
 	isTermAndConditionAccepted: boolean;
 	lastLogin: Date;

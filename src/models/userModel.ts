@@ -2,6 +2,7 @@ import { Gender, IDType, Provider, Role } from '@/common/constants';
 import { IUser, UserMethods } from '@/common/interfaces';
 import bcrypt from 'bcryptjs';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
+import { twoFactorSchema } from './twoFactorModel';
 
 type UserModel = Model<IUser, unknown, UserMethods>;
 
@@ -115,7 +116,6 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 		},
 		lastLogin: {
 			type: Date,
-			select: false,
 			default: Date.now(),
 		},
 		verificationToken: {
@@ -126,20 +126,9 @@ const userSchema = new mongoose.Schema<IUser, unknown, UserMethods>(
 			type: String,
 			select: false,
 		},
-		timeBased2FA: {
-			active: Boolean,
-			secret: {
-				type: String,
-				select: false,
-			},
-			recoveryCode: {
-				type: String,
-				select: false,
-			},
-			receiveCodeViaEmail: {
-				type: Boolean,
-				select: true,
-			},
+		twoFA: {
+			type: twoFactorSchema,
+			default: {},
 		},
 		isTermAndConditionAccepted: {
 			type: Boolean,
@@ -173,7 +162,6 @@ userSchema.pre('save', async function (next) {
 			this.email,
 			this.phoneNumber,
 			this.photo,
-			//this.address.length,
 			this.gender,
 			this.isIdVerified,
 			this.isMobileVerified,
