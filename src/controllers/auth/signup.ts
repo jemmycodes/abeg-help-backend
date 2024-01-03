@@ -1,5 +1,5 @@
 import { Provider } from '@/common/constants';
-import { hashPassword, sendVerificationEmail, toJSON } from '@/common/utils';
+import { hashPassword, sendVerificationEmail, setCache, toJSON } from '@/common/utils';
 import AppError from '@/common/utils/appError';
 import { AppResponse } from '@/common/utils/appResponse';
 import { catchAsync } from '@/middlewares';
@@ -36,5 +36,6 @@ export const signUp = catchAsync(async (req: Request, res: Response) => {
 	await sendVerificationEmail(user, req);
 
 	// save user to cache without password
+	await setCache(user._id.toString(), toJSON(user, ['password']));
 	AppResponse(res, 201, toJSON(user), 'Account created successfully');
 });
