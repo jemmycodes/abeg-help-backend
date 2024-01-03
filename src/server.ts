@@ -1,3 +1,5 @@
+// DO NOT TOUCH THIS FILE!!!
+
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import '@/common/interfaces/IRequest';
 import { logger, stream } from '@/common/utils/logger';
