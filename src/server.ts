@@ -1,4 +1,14 @@
-// DO NOT TOUCH THIS FILE!!!
+///////////////////////////////////////////////////////////////////////
+// DO NOT CHANGE THE ORDER OF THE IMPORTS;
+// DOT ENV AND MODULE ALIAS WILL NOT WORK PROPERLY UNLESS THEY ARE IMPORTED FIRST
+
+import * as dotenv from 'dotenv';
+dotenv.config();
+if (process.env.NODE_ENV === 'production') {
+	require('module-alias/register');
+}
+
+///////////////////////////////////////////////////////////////////////
 
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import '@/common/interfaces/IRequest';
@@ -13,7 +23,6 @@ import { ExpressAdapter } from '@bull-board/express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import * as dotenv from 'dotenv';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
@@ -28,10 +37,6 @@ import xss from 'xss-clean';
 import socketController from './controllers/sockets';
 import { catchSocketAsync } from './middlewares/catchSocketAsyncErrors';
 import { emailQueue, emailQueueEvent, emailWorker, stopQueue } from './queues/emailQueue';
-dotenv.config();
-if (process.env.NODE_ENV === 'production') {
-	require('module-alias/register');
-}
 dotenv.config();
 /**
  *  uncaughtException handler

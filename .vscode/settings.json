@@ -1,0 +1,27 @@
+{
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": false
+	},
+	"cSpell.words": [
+		"Abeg",
+		"ABEGHELP",
+		"bullmq",
+		"cellspacing",
+		"clickjacking",
+		"didn",
+		"frameguard",
+		"hsts",
+		"Isocket",
+		"linklocal",
+		"luxon",
+		"Millis",
+		"Neue",
+		"Noto",
+		"Segoe",
+		"signin",
+		"uniquelocal"
+	],
+	"rules": {
+		"sort-imports": "off"
+	}
+}
