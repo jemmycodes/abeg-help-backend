@@ -21,7 +21,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 
 	const cachedUser = (await getFromCache(decryptedToken.id)) as IUser;
 
-	if (cachedUser.isEmailVerified) {
+	if (cachedUser?.isEmailVerified) {
 		return AppResponse(res, 200, {}, 'Account already verified!');
 	}
 
