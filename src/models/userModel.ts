@@ -181,5 +181,6 @@ userSchema.method('verifyPassword', async function (this: HydratedDocument<IUser
 	return isValid;
 });
 
-const UserModel = mongoose.model<IUser, UserModel>('User', userSchema);
+const UserModel = (mongoose.models.User as UserModel) || mongoose.model<IUser, UserModel>('User', userSchema);
+
 export { UserModel };

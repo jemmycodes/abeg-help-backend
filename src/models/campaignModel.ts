@@ -79,5 +79,6 @@ const campaignSchema = new mongoose.Schema<ICampaign>(
 campaignSchema.index({ title: 'text' });
 campaignSchema.index({ creator: 1 });
 
-const campaignModel = mongoose.model('campaign', campaignSchema);
+const campaignModel = (mongoose.models.campaign as campaignModel) || mongoose.model('campaign', campaignSchema);
+
 export { campaignModel };
