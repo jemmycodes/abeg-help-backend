@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 ///////////////////////////////////////////////////////////////////////
-
+import '@/common/interfaces/request';
 import { ENVIRONMENT, connectDb } from '@/common/config';
 import { logger, stream } from '@/common/utils';
 import { errorHandler, socketController } from '@/controllers';
