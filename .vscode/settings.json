@@ -19,6 +19,8 @@
 		"Noto",
 		"Segoe",
 		"signin",
+		"signout",
+		"TOTP",
 		"uniquelocal"
 	],
 	"rules": {
