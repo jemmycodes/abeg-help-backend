@@ -4,24 +4,33 @@ import { campaignModel } from '@/models';
 import { Request, Response } from 'express';
 
 export const stepOne = async (req: Request, res: Response) => {
-	const { country, tags, categoryId } = req.body;
+	const { country, tags, categoryId, campaignId } = req.body;
 	const { user } = req;
-	const { id } = req.query;
 
 	if (!country || !tags || !categoryId) {
 		throw new AppError('Please provide required details', 400);
 	}
 
-	const userCampaign = await campaignModel.findOne(
-		id ? { _id: id, isComplete: false, creator: user?._id } : { isComplete: false, creator: user?._id }
-	);
+	const existingCampaign = await campaignModel.findOne({ isComplete: false, creator: user?._id });
 
-	let createdCampaign: ICampaign | null;
+	if (existingCampaign && !categoryId) {
+		throw new AppError('Only one incomplete campaign allowed at a time.', 400);
+	}
 
-	if (userCampaign) {
-		createdCampaign = await campaignModel.findOneAndUpdate({ _id: userCampaign._id }, { country, tags, categoryId });
-	} else {
-		createdCampaign = await campaignModel.create({ country, tags, categoryId, creator: user!._id });
+	const filter = campaignId
+		? { _id: campaignId, isComplete: false, creator: user?._id }
+		: { isComplete: false, creator: user?._id };
+	const update = { country, tags, categoryId, creator: user?._id };
+
+	// This creates a new document if not existing {upsert: true} or updates the existing document if it exists based on the filter
+	const createdCampaign: ICampaign | null = await campaignModel.findOneAndUpdate(filter, update, {
+		new: true,
+		runValidators: true,
+		upsert: true,
+	});
+
+	if (!createdCampaign) {
+		throw new AppError('Unable to create or update campaign', 500);
 	}
 
 	AppResponse(res, 200, createdCampaign, 'Proceed to step 2');
