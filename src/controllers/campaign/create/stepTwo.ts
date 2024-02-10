@@ -28,6 +28,10 @@ export const stepTwo = async (req: Request, res: Response) => {
 		throw new AppError('Deadline must be more than 1 day from today', 400);
 	}
 
+	if (goal < 5000) {
+		throw new AppError('Goal amount must be at least 1000 naira', 400);
+	}
+
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
 		{ _id: id, isComplete: false, creator: user?._id },
 		{
