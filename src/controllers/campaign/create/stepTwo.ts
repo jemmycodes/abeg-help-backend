@@ -29,7 +29,7 @@ export const stepTwo = async (req: Request, res: Response) => {
 	}
 
 	if (goal < 5000) {
-		throw new AppError('Goal amount must be at least 1000 naira', 400);
+		throw new AppError('Goal amount must be at least 5000 naira', 400);
 	}
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
