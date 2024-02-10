@@ -22,12 +22,12 @@ const campaignCategorySchema = new mongoose.Schema<ICampaignCategory>(
 campaignCategorySchema.pre(/^find/, function (this: Model<ICampaignCategory>, next) {
 	// pick deleted categories if the query has isDeleted
 	if (Object.keys(this['_conditions']).includes('isDeleted')) {
-		this.find({ isSuspended: { $ne: true } });
+		this.find({});
 		return next();
 	}
 
-	// do not select categories that are deleted or suspended
-	this.find({ $or: [{ isDeleted: { $ne: true } }, { isSuspended: { $ne: true } }] });
+	// do not select campaigns that are deleted or suspended
+	this.find({ isDeleted: { $ne: true } });
 	next();
 });
 
