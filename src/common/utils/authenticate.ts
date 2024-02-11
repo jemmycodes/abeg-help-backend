@@ -19,6 +19,7 @@ export const authenticate = async ({
 	abegAccessToken?: string;
 	abegRefreshToken?: string;
 }): Promise<AuthenticateResult> => {
+	console.log(abegAccessToken, abegRefreshToken);
 	if (!abegRefreshToken) {
 		throw new AppError('Unauthorized', 401);
 	}
@@ -84,6 +85,7 @@ export const authenticate = async ({
 				currentUser,
 			};
 		} catch (error) {
+			console.log(error);
 			throw new AppError('Session expired, please log in again', 401);
 		}
 	};

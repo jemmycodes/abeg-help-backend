@@ -4,15 +4,10 @@ import { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
 export const stepTwo = async (req: Request, res: Response) => {
-	const { title, fundraiser, goal, deadline } = req.body;
+	const { title, fundraiser, goal, deadline, campaignId } = req.body;
 	const { user } = req;
-	const { id } = req.query;
 
-	if (!id) {
-		throw new AppError('Id is required');
-	}
-
-	if (!title || !fundraiser || !goal || !deadline) {
+	if (!title || !fundraiser || !goal || !deadline || !campaignId) {
 		throw new AppError('Please provide required details', 400);
 	}
 
@@ -33,7 +28,7 @@ export const stepTwo = async (req: Request, res: Response) => {
 	}
 
 	const updatedCampaign = await campaignModel.findOneAndUpdate(
-		{ _id: id, isComplete: false, creator: user?._id },
+		{ _id: campaignId, isComplete: false, creator: user?._id },
 		{
 			title,
 			fundraiser,
@@ -44,7 +39,7 @@ export const stepTwo = async (req: Request, res: Response) => {
 	);
 
 	if (!updatedCampaign) {
-		throw new AppError(`Unable to process request, try again later`, 404);
+		throw new AppError(`Unable to update campaign, try again later`, 404);
 	}
 
 	AppResponse(res, 200, updatedCampaign, 'Proceed to step 3');
