@@ -10,17 +10,13 @@ const campaignCategorySchema = new mongoose.Schema<ICampaignCategory>(
 			required: true,
 			unique: true,
 		},
-		isDeleted: {
-			type: Boolean,
-			default: false,
-		},
 	},
 	{ timestamps: true }
 );
 
-// only pick categories that are not deleted or suspended
-campaignCategorySchema.pre(/^find/, function (this: Model<ICampaignCategory>, next) {
-	// pick deleted categories if the query has isDeleted
+// only pick campaigns that are not deleted or suspended
+campaignCategorySchema.pre(/^find/, function (this: Model<campaignCategoryModel>, next) {
+	// pick deleted campaigns if the query has isDeleted
 	if (Object.keys(this['_conditions']).includes('isDeleted')) {
 		this.find({});
 		return next();
@@ -30,7 +26,6 @@ campaignCategorySchema.pre(/^find/, function (this: Model<ICampaignCategory>, ne
 	this.find({ isDeleted: { $ne: true } });
 	next();
 });
-
 export const campaignCategoryModel =
 	(mongoose.models.CampaignCategory as campaignCategoryModel) ||
 	mongoose.model('CampaignCategory', campaignCategorySchema);
