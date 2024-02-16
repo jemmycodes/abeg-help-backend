@@ -1,12 +1,13 @@
 import {
 	createCampaign,
 	deleteCampaign,
-	createCategory,
+	createOrUpdateCategory,
 	featuredCampaigns,
 	getCategories,
 	reviewCampaign,
 	getAllCampaigns,
 	getOneCampaign,
+	deleteCategory,
 } from '@/controllers';
 import { protect } from '@/middlewares';
 import express from 'express';
@@ -20,8 +21,12 @@ router.get('/one/:shortId', getOneCampaign);
 router.get('/user/:userId', getAllCampaigns);
 
 router.use(protect);
+// campaign category
 router.get('/categories', getCategories);
-router.post('/category/create', createCategory);
+router.post('/category', multerUpload.single('image'), createOrUpdateCategory);
+router.post('/category/delete', deleteCategory);
+
+// campaign
 router.post('/create/:step', multerUpload.array('photos', 5), createCampaign);
 router.post('/review/:id', reviewCampaign);
 router.post('/delete', deleteCampaign);
