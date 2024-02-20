@@ -1,16 +1,7 @@
 import { ENVIRONMENT } from '@/common/config';
 import { Provider } from '@/common/constants';
 import { IUser } from '@/common/interfaces';
-import {
-	AppError,
-	AppResponse,
-	hashData,
-	sendLoginNotificationEmail,
-	sendVerificationEmail,
-	setCache,
-	setCookie,
-	toJSON,
-} from '@/common/utils';
+import { AppError, AppResponse, hashData, sendVerificationEmail, setCache, setCookie, toJSON } from '@/common/utils';
 import { catchAsync } from '@/middlewares';
 import { UserModel } from '@/models';
 import type { Request, Response } from 'express';
@@ -100,7 +91,6 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 			'Sign in successfully, proceed to 2fa verification'
 		);
 	} else {
-		await sendLoginNotificationEmail(user, req);
 		return AppResponse(res, 200, toJSON(updatedUser), 'Sign in successful');
 	}
 });

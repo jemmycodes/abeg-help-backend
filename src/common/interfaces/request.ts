@@ -9,7 +9,6 @@ declare global {
 			user?: Require_id<IUser>;
 			io: Server;
 			file?: Express.Multer.File;
-			location: string | null;
 		}
 	}
 

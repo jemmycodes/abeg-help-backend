@@ -8,11 +8,10 @@ import {
 	accountRestoredEmailTemplate,
 	forgotPassword,
 	get2faCodeViaEmailTemplate,
-	loginNotification,
-	recoveryKeysEmail,
 	resetPassword,
 	welcomeEmail,
 } from '../templates';
+import { recoveryKeysEmail } from '../templates/recoveryKeysEmail';
 
 const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 
@@ -51,11 +50,6 @@ const TEMPLATES = {
 		subject: 'AbegHelp 2FA Code',
 		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
 		template: recoveryKeysEmail,
-	},
-	loginNotification: {
-		subject: 'AbegHelp Login Notification',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
-		template: loginNotification,
 	},
 };
 
