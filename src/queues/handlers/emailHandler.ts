@@ -19,42 +19,42 @@ const resend = new Resend(ENVIRONMENT.EMAIL.API_KEY);
 const TEMPLATES = {
 	resetPassword: {
 		subject: 'Password Reset Successful',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: resetPassword,
 	},
 	forgotPassword: {
 		subject: 'Reset Your Password',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: forgotPassword,
 	},
 	welcomeEmail: {
 		subject: 'Welcome to AbegHelp',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: welcomeEmail,
 	},
 	deleteAccount: {
 		subject: 'AbegHelp Account Deleted',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: accountDeletedEmailTemplate,
 	},
 	restoreAccount: {
 		subject: 'AbegHelp Account Restored',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: accountRestoredEmailTemplate,
 	},
 	get2faCodeViaEmail: {
 		subject: 'AbegHelp 2FA Code',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: get2faCodeViaEmailTemplate,
 	},
 	recoveryKeysEmail: {
 		subject: 'AbegHelp 2FA Code',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: recoveryKeysEmail,
 	},
 	loginNotification: {
 		subject: 'AbegHelp Login Notification',
-		from: 'AbegHelp Customer Support <donotreply@abeghelp.me>',
+		from: 'AbegHelp <donotreply@abeghelp.me>',
 		template: loginNotification,
 	},
 };
@@ -65,6 +65,7 @@ export const sendEmail = async (job: EmailJobData) => {
 
 	console.log('job send email', job);
 	console.log('options', options);
+	console.log(options.template(data));
 	try {
 		const dispatch = await resend.emails.send({
 			from: options.from,
