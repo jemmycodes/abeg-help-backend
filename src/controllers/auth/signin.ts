@@ -110,19 +110,22 @@ export const signIn = catchAsync(async (req: Request, res: Response) => {
 			'Sign in successfully, proceed to 2fa verification'
 		);
 	} else {
+		const lastLoginMeta = await locationModel.findOne({ user: user._id }).sort({ createdAt: -1 });
 		// send login notification email
-		await addEmailToQueue({
-			type: 'loginNotification',
-			data: {
-				to: user.email,
-				name: user.firstName,
-				ipv4: userAgent.ipv4,
-				os: userAgent.os,
-				country: userAgent.country,
-				city: userAgent.city,
-				timezone: userAgent.timezone,
-			},
-		});
+		if (lastLoginMeta?.country !== userAgent.country || lastLoginMeta?.city !== userAgent.city) {
+			await addEmailToQueue({
+				type: 'loginNotification',
+				data: {
+					to: user.email,
+					name: user.firstName,
+					ipv4: userAgent.ipv4,
+					os: userAgent.os,
+					country: userAgent.country,
+					city: userAgent.city,
+					timezone: userAgent.timezone,
+				},
+			});
+		}
 		return AppResponse(res, 200, toJSON(updatedUser), 'Sign in successful');
 	}
 });
