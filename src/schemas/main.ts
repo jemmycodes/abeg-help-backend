@@ -34,6 +34,7 @@ export const mainSchema = z.object({
 		.regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/, {
 			message: `Password must contain at least one uppercase letter, one lowercase letter, one number and one special character or symbol`,
 		}),
+	confirmPassword: z.string(),
 	phoneNumber: z
 		.string()
 		.min(10, 'Last name must be at least 10 characters long')
