@@ -55,15 +55,12 @@ export const resetPassword = () => {
             </table>
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
-                <tr>
-                  <td>
-                    <p class="" style="font-size:1.25rem;line-height:1.75rem;margin:16px 0">Hi, Ola</p>
-                    <p style="font-size:14px;line-height:24px;margin:16px 0">To ensure the security of your account and complete the password reset process, please use the password reset link below;</p><a style="color:rgb(255,255,255);text-decoration:none;background-color:rgb(43,144,142);padding-left:1.75rem;padding-right:1.75rem;padding-top:0.5rem;padding-bottom:0.5rem;margin-top:0.75rem;margin-bottom:0.75rem;border-radius:0.375rem;text-align:center;margin-left:auto;margin-right:auto;cursor:pointer" target="_blank">Reset Password</a>
-                    <p style="font-size:14px;line-height:24px;margin:16px 0">This verification link will expire in 24 hours for security</p>
-                    <p style="font-size:14px;line-height:24px;margin:16px 0">If you didn&#x27;t request this password reset, please disregard this email</p>
-                  </td>
-                </tr>
-              </tbody>
+				<tr>
+				  <td>
+					<p style="font-size:14px;line-height:24px;margin:16px 0">Your password has been changed successfully. If you didn't initiate this action, kindly reach our support team donotreply@abeghelp.me</p>
+				  </td>
+				</tr>
+			  </tbody>
             </table>
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
