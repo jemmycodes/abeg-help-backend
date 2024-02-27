@@ -49,7 +49,7 @@ export const welcomeEmail = (data) => {
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
                 <tr>
-                  <td><img alt="Abeg help Illustration" src="https://static.abeghelp.me/welcome-mail.png" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
+                  <td><img alt="Abeg help Illustration" src="https://static.abeghelp.me/assets/welcome-mail.png" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
                 </tr>
               </tbody>
             </table>
@@ -57,7 +57,7 @@ export const welcomeEmail = (data) => {
               <tbody>
                 <tr>
                   <td>
-                    <p class="" style="font-size:1.25rem;line-height:1.75rem;margin:16px 0">Hi, ${data.firstName}</p>
+                    <p class="" style="font-size:1.25rem;line-height:1.75rem;margin:16px 0">Hi, ${data.firstname}</p>
                     <p class="" style="font-size:14px;line-height:24px;margin:16px 0">We’re glad to have you onboard! You’re already on your way to fundraising with ease.</p>
                     <p style="font-size:14px;line-height:24px;margin:16px 0">Whether you’re here for yourself, for a cause, or just for fun — welcome!</p>
                     <p style="font-size:14px;line-height:24px;margin:16px 0">To complete your registration and secure your account, please verify your email using the email verification link below</p>
