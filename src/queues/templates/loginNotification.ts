@@ -91,7 +91,7 @@ export const loginNotification = (data) => {
 											<td>
 												<img
 													alt="Abeg help Illustration"
-													src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811249/abeghelp%20assets/6538623_1_rqlcxj.png"
+													src="https://static.abeghelp.me/login-notification.png"
 													style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover"
 												/>
 											</td>

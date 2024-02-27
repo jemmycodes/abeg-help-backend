@@ -49,7 +49,7 @@ export const accountDeletedEmailTemplate = (data) => {
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
                 <tr>
-                  <td><img alt="Abeg help Illustration" src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811249/abeghelp%20assets/6538623_1_rqlcxj.png" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
+                  <td><img alt="Abeg help Illustration" src="https://static.abeghelp.me/deleted.jpg" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
                 </tr>
               </tbody>
             </table>

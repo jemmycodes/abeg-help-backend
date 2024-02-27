@@ -26,20 +26,7 @@ export const forgotPassword = (data) => {
               }
             </style>
             <div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">AbegHelp - Forgot your Password!</div>
-            <table align="center" width="100%" class="" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="width:100%;max-width:100px;margin-left:auto;margin-right:auto">
-              <tbody>
-                <tr>
-                  <td>
-                    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
-                      <tbody style="width:100%">
-                        <tr style="width:100%">
-                          <td data-id="__react-email-column"><img alt="Abeg Help Logo" height="30" src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704816639/abeghelp%20assets/abeg_logo_nfbolw.png" style="display:block;outline:none;border:none;text-decoration:none;margin-right:0.5rem" width="30" /></td>
-                          <td data-id="__react-email-column">
-                            <p style="font-size:1.125rem;line-height:1.75rem;margin:16px 0;font-weight:700;color:rgb(43,144,142)">AbegHelp.me</p>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+          
                   </td>
                 </tr>
               </tbody>
