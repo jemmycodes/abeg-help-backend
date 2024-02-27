@@ -46,13 +46,7 @@ export const resetPassword = () => {
               </tbody>
             </table>
             <h1 style="font-size:1.25rem;line-height:1.75rem;letter-spacing:0.025em;font-weight:700;text-align:center">Reset your AbegHelp Password!</h1>
-            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
-              <tbody>
-                <tr>
-                  <td><img alt="Abeg help Illustration" src="https://res.cloudinary.com/dsg6otcag/image/upload/v1704811249/abeghelp%20assets/6538623_1_rqlcxj.png" style="display:block;outline:none;border:none;text-decoration:none;max-width:24rem;height:13rem;width:100%;object-fit:cover" /></td>
-                </tr>
-              </tbody>
-            </table>
+           
             <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
               <tbody>
 				<tr>
